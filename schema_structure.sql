@@ -13,7 +13,7 @@ CREATE TABLE food_items (
 );
 
 CREATE TABLE leisure_items (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,  
     name VARCHAR(255) NOT NULL,
     description TEXT,
     image MEDIUMBLOB,

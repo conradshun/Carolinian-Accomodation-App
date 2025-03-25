@@ -7,16 +7,16 @@ CREATE TABLE food_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    image VARCHAR(255),
+    image MEDIUMBLOB,
     direction_link VARCHAR(255),
     open_hours VARCHAR(255)
 );
 
 CREATE TABLE leisure_items (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,  
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    image VARCHAR(255),
+    image MEDIUMBLOB,
     direction_link VARCHAR(255),
     open_hours VARCHAR(255)
 );
@@ -25,7 +25,7 @@ CREATE TABLE service_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    image VARCHAR(255),
+    image MEDIUMBLOB,
     direction_link VARCHAR(255),
     open_hours VARCHAR(255)
 );
@@ -44,7 +44,7 @@ CREATE TABLE accommodation_data (
     address VARCHAR(255),
     contact_info VARCHAR(255),
     website VARCHAR(255),
-    image VARCHAR(255)
+    image MEDIUMBLOB
 );
 
 -- Junction tables for the many-to-many relationships between items and tags

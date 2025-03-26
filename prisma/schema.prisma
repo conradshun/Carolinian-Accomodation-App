@@ -13,9 +13,77 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  createdAt DateTime @default(now())
+model FoodItem {
+    id            Int      @id @default(autoincrement())
+    name          String
+    description   String?
+    image         Bytes?
+    directionLink String?
+    openHours     String?
+    tags          FoodItemTag[]
+}
+
+model LeisureItem {
+    id            Int      @id @default(autoincrement())
+    name          String
+    description   String?
+    image         Bytes?
+    directionLink String?
+    openHours     String?
+    tags          LeisureItemTag[]
+}
+
+model ServiceItem {
+    id            Int      @id @default(autoincrement())
+    name          String
+    description   String?
+    image         Bytes?
+    directionLink String?
+    openHours     String?
+    tags          ServiceItemTag[]
+}
+
+model Tag {
+    id             Int      @id @default(autoincrement())
+    name           String   @unique
+    foodItems      FoodItemTag[]
+    leisureItems   LeisureItemTag[]
+    serviceItems   ServiceItemTag[]
+}
+
+model AccommodationData {
+    id          Int      @id @default(autoincrement())
+    name        String
+    description String?
+    address     String?
+    contactInfo String?
+    website     String?
+    image       Bytes?
+}
+
+model FoodItemTag {
+    foodItemId  Int
+    tagId       Int
+    foodItem    FoodItem @relation(fields: [foodItemId], references: [id], onDelete: Cascade)
+    tag         Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+    @@id([foodItemId, tagId])
+}
+
+model LeisureItemTag {
+    leisureItemId Int
+    tagId         Int
+    leisureItem   LeisureItem @relation(fields: [leisureItemId], references: [id], onDelete: Cascade)
+    tag           Tag           @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+    @@id([leisureItemId, tagId])
+}
+
+model ServiceItemTag {
+    serviceItemId Int
+    tagId         Int
+    serviceItem   ServiceItem @relation(fields: [serviceItemId], references: [id], onDelete: Cascade)
+    tag           Tag           @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+    @@id([serviceItemId, tagId])
 }

@@ -1,80 +1,87 @@
--- Users table
-CREATE TABLE `User` (
+-- CreateTable food_items
+CREATE TABLE `food_items` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `email` VARCHAR(191) NOT NULL,
-    `name` VARCHAR(191) NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+    `name` VARCHAR(255) NOT NULL,
+    `description` TEXT NULL,
+    `image` MEDIUMBLOB NULL,
+    `direction_link` VARCHAR(255) NULL,
+    `open_hours` VARCHAR(255) NULL,
 
-    UNIQUE INDEX `users_email_key`(`email`),    PRIMARY KEY (`id`)
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-CREATE TABLE `food_items` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `name` VARCHAR(255) NOT NULL,
-    `description` TEXT,
-    `image` MEDIUMBLOB,
-    `direction_link` VARCHAR(255),
-    `open_hours` VARCHAR(255)
-);
-
+-- CreateTable leisure_items
 CREATE TABLE `leisure_items` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,  
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
-    `description` TEXT,
-    `image` MEDIUMBLOB,
-    `direction_link` VARCHAR(255),
-    `open_hours` VARCHAR(255)
-);
+    `description` TEXT NULL,
+    `image` MEDIUMBLOB NULL,
+    `direction_link` VARCHAR(255) NULL,
+    `open_hours` VARCHAR(255) NULL,
 
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable service_items
 CREATE TABLE `service_items` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
-    `description` TEXT,
-    `image` MEDIUMBLOB,
-    `direction_link` VARCHAR(255),
-    `open_hours` VARCHAR(255)
-);
+    `description` TEXT NULL,
+    `image` MEDIUMBLOB NULL,
+    `direction_link` VARCHAR(255) NULL,
+    `open_hours` VARCHAR(255) NULL,
 
--- Create table for tags (many-to-many relationship)
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable tags
 CREATE TABLE `tags` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `name` VARCHAR(100) NOT NULL UNIQUE
-);
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(100) NOT NULL,
 
--- Create table for accommodation data
+    UNIQUE INDEX `tags_name_key`(`name`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable accommodation_data
 CREATE TABLE `accommodation_data` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
-    `description` TEXT,
-    `address` VARCHAR(255),
-    `contact_info` VARCHAR(255),
-    `website` VARCHAR(255),
-    `image` MEDIUMBLOB
-);
+    `description` TEXT NULL,
+    `address` VARCHAR(255) NULL,
+    `contact_info` VARCHAR(255) NULL,
+    `website` VARCHAR(255) NULL,
+    `image` MEDIUMBLOB NULL,
 
--- Junction tables for the many-to-many relationships between items and tags
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable food_item_tags
 CREATE TABLE `food_item_tags` (
-    `food_item_id` INT,
-    `tag_id` INT,
-    PRIMARY KEY (food_item_id, tag_id),
-    FOREIGN KEY (food_item_id) REFERENCES food_items(id) ON DELETE CASCADE,
-    FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
-);
+    `food_item_id` INTEGER NOT NULL,
+    `tag_id` INTEGER NOT NULL,
 
+    PRIMARY KEY (`food_item_id`, `tag_id`),
+    FOREIGN KEY (`food_item_id`) REFERENCES `food_items`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`tag_id`) REFERENCES `tags`(`id`) ON DELETE CASCADE
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable leisure_item_tags
 CREATE TABLE `leisure_item_tags` (
-    `leisure_item_id` INT,
-    `tag_id` INT,
-    PRIMARY KEY (leisure_item_id, tag_id),
-    FOREIGN KEY (leisure_item_id) REFERENCES leisure_items(id) ON DELETE CASCADE,
-    FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
-);
+    `leisure_item_id` INTEGER NOT NULL,
+    `tag_id` INTEGER NOT NULL,
 
+    PRIMARY KEY (`leisure_item_id`, `tag_id`),
+    FOREIGN KEY (`leisure_item_id`) REFERENCES `leisure_items`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`tag_id`) REFERENCES `tags`(`id`) ON DELETE CASCADE
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable service_item_tags
 CREATE TABLE `service_item_tags` (
-    `service_item_id` INT,
-    `tag_id` INT,
-    PRIMARY KEY (service_item_id, tag_id),
-    FOREIGN KEY (service_item_id) REFERENCES service_items(id) ON DELETE CASCADE,
-    FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
-);
+    `service_item_id` INTEGER NOT NULL,
+    `tag_id` INTEGER NOT NULL,
+
+    PRIMARY KEY (`service_item_id`, `tag_id`),
+    FOREIGN KEY (`service_item_id`) REFERENCES `service_items`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`tag_id`) REFERENCES `tags`(`id`) ON DELETE CASCADE
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

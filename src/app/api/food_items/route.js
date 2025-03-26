@@ -1,4 +1,4 @@
-/* import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
@@ -33,6 +33,6 @@ export async function GET() {
     console.error('Error fetching food items:', error);
     return NextResponse.json({ error: 'Failed to fetch food items' }, { status: 500 });
   }
-} */
+}
 
 //WE SAVE THIS CODE SNIPPET FOR LATER

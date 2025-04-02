@@ -27,7 +27,7 @@ export async function POST(req) {
       imageData = Buffer.from(await image.arrayBuffer())
     }
 
-    const newFoodItem = await prisma.foodItem.create({
+    const newLeisureItem = await prisma.leisureItem.create({
       data: {
         name,
         description: description || null,
@@ -37,20 +37,20 @@ export async function POST(req) {
       },
     })
 
-    return NextResponse.json(newFoodItem, { status: 201 })
+    return NextResponse.json(newLeisureItem, { status: 201 })
   } catch (error) {
-    console.error("Error creating food item:", error)
-    return NextResponse.json({ error: "Failed to create food item", details: error.message }, { status: 500 })
+    console.error("Error creating leisure item:", error)
+    return NextResponse.json({ error: "Failed to create leisure item", details: error.message }, { status: 500 })
   }
 }
 
 export async function GET() {
   try {
-    const foodItems = await prisma.foodItem.findMany()
-    return NextResponse.json(foodItems, { status: 200 })
+    const leisureItems = await prisma.leisureItem.findMany()
+    return NextResponse.json(leisureItems, { status: 200 })
   } catch (error) {
-    console.error("Error fetching food items:", error)
-    return NextResponse.json({ error: "Failed to fetch food items" }, { status: 500 })
+    console.error("Error fetching leisure items:", error)
+    return NextResponse.json({ error: "Failed to fetch leisure items" }, { status: 500 })
   }
 }
 
@@ -72,23 +72,23 @@ export async function DELETE(req) {
     }
 
     // Check if the item exists first
-    const foodItem = await prisma.foodItem.findUnique({
+    const leisureItem = await prisma.leisureItem.findUnique({
       where: { id: idInt },
     })
 
-    if (!foodItem) {
-      return NextResponse.json({ error: "Food item not found" }, { status: 404 })
+    if (!leisureItem) {
+      return NextResponse.json({ error: "Leisure item not found" }, { status: 404 })
     }
 
     // Delete the item
-    await prisma.foodItem.delete({
+    await prisma.leisureItem.delete({
       where: { id: idInt },
     })
 
-    return NextResponse.json({ message: `Food item with ID ${idInt} deleted successfully` }, { status: 200 })
+    return NextResponse.json({ message: `Leisure item with ID ${idInt} deleted successfully` }, { status: 200 })
   } catch (error) {
-    console.error("Error deleting food item:", error)
-    return NextResponse.json({ error: "Failed to delete food item", details: error.message }, { status: 500 })
+    console.error("Error deleting leisure item:", error)
+    return NextResponse.json({ error: "Failed to delete leisure item", details: error.message }, { status: 500 })
   }
 }
 

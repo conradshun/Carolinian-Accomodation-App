@@ -33,6 +33,7 @@ export default function FoodItemDetails() {
   return (
     <div>
       <h1>{foodItem.name}</h1>
+      {foodItem.image && <img src={foodItem.image} alt={foodItem.name} />} 
       <p>Description: {foodItem.description}</p>
       <h4>Location Link: {foodItem.directionLink}</h4>
       <h3>Open Hours: {foodItem.openHours}</h3>

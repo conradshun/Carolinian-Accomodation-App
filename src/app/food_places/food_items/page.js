@@ -9,7 +9,7 @@ export default function Home() {
     useEffect(() => {
         const fetchFoodData = async () => {
             try {
-                const response = await fetch('/api/foodItem');
+                const response = await fetch('/api/food_items');
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }

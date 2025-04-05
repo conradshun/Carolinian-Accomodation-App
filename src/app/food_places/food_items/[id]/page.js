@@ -11,7 +11,7 @@ export default function FoodItemDetails() {
     if (id) {
       const fetchFoodItem = async () => {
         try {
-          const response = await fetch(`/api/foodItem/${id}`);
+          const response = await fetch(`/api/food_items/${id}`);
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }

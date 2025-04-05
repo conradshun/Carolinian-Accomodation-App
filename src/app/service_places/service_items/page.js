@@ -8,7 +8,7 @@ export default function Home() {
     useEffect(() => {
         const fetchServiceData = async () => {
             try {
-                const response = await fetch('/api/serviceItem');
+                const response = await fetch('/api/service_items');
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }

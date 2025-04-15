@@ -61,7 +61,7 @@ function ServiceItem({ item }) {
       <li>
         <Link href={`/service_places/service_items/${item.id}`}>{item.name}</Link>
         <br />
-        <Link href={`/service_places/service_items/${item.id}`}>{item.description}</Link>
+        <p href={`/service_places/service_items/${item.id}`}>{item.description}</p>
         <br />
         {imageSrc ? (
           <img className="h-48 w-96 object-cover ..." src={imageSrc} alt={item.name} />
@@ -71,7 +71,7 @@ function ServiceItem({ item }) {
         <br />
         <Link href={`/service_places/service_items/${item.id}`}>{item.directionLink}</Link>
         <br />
-        <Link href={`/service_places/service_items/${item.id}`}>{item.openHours}</Link>
+        <p href={`/service_places/service_items/${item.id}`}>{item.openHours}</p>
         <br />
         <br />
       </li>

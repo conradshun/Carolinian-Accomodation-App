@@ -61,7 +61,7 @@ function FoodItem({ item }) {
       <li>
         <Link href={`/food_places/food_items/${item.id}`}>{item.name}</Link>
         <br />
-        <Link href={`/food_places/food_items/${item.id}`}>{item.description}</Link>
+        <p href={`/food_places/food_items/${item.id}`}>{item.description}</p>
         <br />
         {imageSrc ? (
           <img className="h-48 w-96 object-cover ..." src={imageSrc} alt={item.name} />
@@ -71,7 +71,7 @@ function FoodItem({ item }) {
         <br />
         <Link href={`/food_places/food_items/${item.id}`}>{item.directionLink}</Link>
         <br />
-        <Link href={`/food_places/food_items/${item.id}`}>{item.openHours}</Link>
+        <p href={`/food_places/food_items/${item.id}`}>{item.openHours}</p>
         <br />
         <br />
       </li>

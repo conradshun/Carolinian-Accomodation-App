@@ -26,7 +26,7 @@ export default function serviceItemDetails() {
     }
   }, [id]);
 
-  useEffect(() => {
+  useEffect(()  => {
     if (serviceItem && serviceItem.image) { // Add this check
       // Convert byte array to Base64 string
       const byteArray = new Uint8Array(serviceItem.image);

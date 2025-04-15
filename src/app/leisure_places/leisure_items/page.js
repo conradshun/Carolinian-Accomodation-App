@@ -61,7 +61,7 @@ function LeisureItem({ item }) {
       <li>
         <Link href={`/leisure_places/leisure_items/${item.id}`}>{item.name}</Link>
         <br />
-        <Link href={`/leisure_places/leisure_items/${item.id}`}>{item.description}</Link>
+        <p href={`/leisure_places/leisure_items/${item.id}`}>{item.description}</p>
         <br />
         {imageSrc ? (
           <img className="h-48 w-96 object-cover ..." src={imageSrc} alt={item.name} />
@@ -71,7 +71,7 @@ function LeisureItem({ item }) {
         <br />
         <Link href={`/leisure_places/leisure_items/${item.id}`}>{item.directionLink}</Link>
         <br />
-        <Link href={`/leisure_places/leisure_items/${item.id}`}>{item.openHours}</Link>
+        <p href={`/leisure_places/leisure_items/${item.id}`}>{item.openHours}</p>
         <br />
         <br />
       </li>

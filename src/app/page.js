@@ -14,9 +14,9 @@ export default function Home() {
         />
         <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           <li className="mb-2">
-            This'll be our initial setup for the project.
+            This&apos;ll be our initial setup for the project.
           </li>
-          <li>Conrad, Rafiq, I hope you're seeing this right now.</li>
+          <li>Conrad, Rafiq, I hope you&apos;re seeing this right now.</li>
         </ol>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">

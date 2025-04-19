@@ -44,51 +44,24 @@ export async function POST(req) {
   }
 }
 
+
 export async function GET() {
   try {
     const foodItems = await prisma.foodItem.findMany()
+
+    if (!foodItems) {
+      return NextResponse.json({ error: "Food items not found" }, { status: 404 });
+    }
+
+    // Convert the byte array to a regular JavaScript array
+    foodItems.forEach(item => {
+      if (item.image) {
+        item.image = Array.from(item.image);
+      }
+    });
     return NextResponse.json(foodItems, { status: 200 })
   } catch (error) {
     console.error("Error fetching food items:", error)
     return NextResponse.json({ error: "Failed to fetch food items" }, { status: 500 })
   }
 }
-
-// Add DELETE functionality
-export async function DELETE(req) {
-  try {
-    // Get the ID from the URL search params
-    const { searchParams } = new URL(req.url)
-    const id = searchParams.get("id")
-
-    if (!id) {
-      return NextResponse.json({ error: "ID parameter is required" }, { status: 400 })
-    }
-
-    const idInt = Number.parseInt(id)
-
-    if (isNaN(idInt)) {
-      return NextResponse.json({ error: "Invalid ID format" }, { status: 400 })
-    }
-
-    // Check if the item exists first
-    const foodItem = await prisma.foodItem.findUnique({
-      where: { id: idInt },
-    })
-
-    if (!foodItem) {
-      return NextResponse.json({ error: "Food item not found" }, { status: 404 })
-    }
-
-    // Delete the item
-    await prisma.foodItem.delete({
-      where: { id: idInt },
-    })
-
-    return NextResponse.json({ message: `Food item with ID ${idInt} deleted successfully` }, { status: 200 })
-  } catch (error) {
-    console.error("Error deleting food item:", error)
-    return NextResponse.json({ error: "Failed to delete food item", details: error.message }, { status: 500 })
-  }
-}
-

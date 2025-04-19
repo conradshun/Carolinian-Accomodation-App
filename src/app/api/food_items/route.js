@@ -1,67 +1,63 @@
-import { PrismaClient } from "@prisma/client"
-import { NextResponse } from "next/server"
+// src/app/api/tags/route.js
+import { PrismaClient } from "@prisma/client";
+import { NextResponse } from "next/server";
 
-const prisma = new PrismaClient()
-
-export async function POST(req) {
-  try {
-    // Handle form-data instead of JSON
-    const formData = await req.formData()
-
-    // Extract values from form data
-    const name = formData.get("name")
-    const description = formData.get("description")
-    const image = formData.get("image")
-    const directionLink = formData.get("directionLink")
-    const openHours = formData.get("openHours")
-
-    // Validate required fields
-    if (!name) {
-      return NextResponse.json({ error: "Name is required" }, { status: 400 })
-    }
-
-    // Process image if provided (assuming it's a file)
-    let imageData = null
-    if (image && image instanceof Blob) {
-      // Convert image to buffer if needed
-      imageData = Buffer.from(await image.arrayBuffer())
-    }
-
-    const newFoodItem = await prisma.foodItem.create({
-      data: {
-        name,
-        description: description || null,
-        image: imageData,
-        directionLink: directionLink || null,
-        openHours: openHours || null,
-      },
-    })
-
-    return NextResponse.json(newFoodItem, { status: 201 })
-  } catch (error) {
-    console.error("Error creating food item:", error)
-    return NextResponse.json({ error: "Failed to create food item", details: error.message }, { status: 500 })
-  }
-}
-
+const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    const foodItems = await prisma.foodItem.findMany()
+    const tags = await prisma.tag.findMany();
 
-    if (!foodItems) {
-      return NextResponse.json({ error: "Food items not found" }, { status: 404 });
+    if (!tags || tags.length === 0) {
+      return NextResponse.json({ error: "No tags found" }, { status: 200 });
     }
-
-    // Convert the byte array to a regular JavaScript array
-    foodItems.forEach(item => {
-      if (item.image) {
-        item.image = Array.from(item.image);
-      }
-    });
-    return NextResponse.json(foodItems, { status: 200 })
+    return NextResponse.json(tags, { status: 200 });
   } catch (error) {
-    console.error("Error fetching food items:", error)
-    return NextResponse.json({ error: "Failed to fetch food items" }, { status: 500 })
+    console.error("Error fetching tags:", error);
+    return NextResponse.json({ error: "Failed to fetch food tags", details: error.message }, { status: 500 });
   }
 }
+
+export async function POST(req) {
+  try {
+    const { name } = await req.json();
+
+    if (!name) {
+      return NextResponse.json({ error: "Food tag name is required" }, { status: 400 });
+    }
+
+    const tag = await prisma.tag.create({
+      data: {
+        name: name,
+      },
+    });
+
+    return NextResponse.json(tag, { status: 201 });
+  } catch (error) {
+    console.error("Error creating tag:", error);
+    return NextResponse.json({ error: "Failed to create tag", details: error.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(req, { params }) {
+  try {
+    const { id } = params;
+
+    if (!id) {
+      return NextResponse.json({ error: "Tag ID is required" }, { status: 400 });
+    }
+
+    const tag = await prisma.tag.delete({
+      where: {
+        id: parseInt(id),
+      },
+    });
+
+    return NextResponse.json({ message: "Tag deleted successfully" }, { status: 200 });
+  } catch (error) {
+    console.error("Error deleting tag:", error);
+    return NextResponse.json({ error: "Failed to delete tag", details: error.message }, { status: 500 });
+  }
+}
+
+

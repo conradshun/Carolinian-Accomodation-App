@@ -17,10 +17,12 @@ export async function SEARCH() {
       })
     })
 
-    // Search using Prisma
+    // Search using Prisma (unsure if FoodItem is the right term to call here or the one in schema structure)
     results = await prisma.FoodItem.findMany({
       where: {
         OR: [
+          //This will probably only work if the input is the full name of the shop.
+          //Adding stuff like showing suggestions based on incomplete words gon be somethin to work on some other time
           { name: { contains: userInput, mode: 'insensitive' } },
         ]
       },
@@ -29,6 +31,9 @@ export async function SEARCH() {
       }
     })
 
+    //Printing out the results of whatever fit the name
+    //This is probably the least efficient way to do this since i dont know how to put them all in one array
+    //So I copy and pasted the same code thrice
     console.log('Search results:')
     results.forEach(item => {
       console.log(`- ${item.name}`)

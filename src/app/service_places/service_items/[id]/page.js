@@ -1,23 +1,25 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Link from "next/link"; // Import Link from next/link
+import Link from "next/link";
 
 export default function serviceItemDetails() {
-  const { id } = useParams(); // Use useParams to get the dynamic route parameter
+  const { id } = useParams();
   const [serviceItem, setServiceItem] = useState(null);
   const [imageSrc, setImageSrc] = useState('');
+  const [tags, setTags] = useState([]); // New state for tags
 
   useEffect(() => {
     if (id) {
       const fetchServiceItem = async () => {
         try {
-          const response = await fetch(`/api/service_items/${id}`);
+          const response = await fetch(`/api/service_items/${id}?includeTags=true`); //Fetch tags
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
           const data = await response.json();
           setServiceItem(data);
+          setTags(data.tags.map(tag => tag.tag)); // Extract tags
         } catch (error) {
           console.error("Error fetching service item:", error);
         }
@@ -26,9 +28,8 @@ export default function serviceItemDetails() {
     }
   }, [id]);
 
-  useEffect(()  => {
-    if (serviceItem && serviceItem.image) { // Add this check
-      // Convert byte array to Base64 string
+  useEffect(() => {
+    if (serviceItem && serviceItem.image) {
       const byteArray = new Uint8Array(serviceItem.image);
       let binary = '';
       const len = byteArray.byteLength;
@@ -38,10 +39,9 @@ export default function serviceItemDetails() {
       const base64String = btoa(binary);
       setImageSrc(`data:image/jpeg;base64,${base64String}`);
     } else {
-      setImageSrc(''); // Reset imageSrc if there's no image
+      setImageSrc('');
     }
   }, [serviceItem]);
-  
 
   if (!serviceItem) {
     return <p>Loading...</p>;
@@ -52,7 +52,7 @@ export default function serviceItemDetails() {
       <h1>{serviceItem.name}</h1>
       <p>Description: {serviceItem.description}</p>
       <div>
-        Image:{" "}
+        Image:
         {imageSrc ? (
           <img className="h-48 w-96 object-cover ..." src={imageSrc} alt={serviceItem.name} />
         ) : (
@@ -60,10 +60,20 @@ export default function serviceItemDetails() {
         )}
       </div>
       <p>
-        Location Link:{" "}
+        Location Link:
         <Link href={serviceItem.directionLink}>{serviceItem.directionLink}</Link>
       </p>
       <p>Open Hours: {serviceItem.openHours}</p>
+
+      {/* Display the tags */}
+      <div>
+        <h2>Tags:</h2>
+        <ul>
+          {tags.map((tag) => (
+            <li key={tag.id}>{tag.name}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
-} 
+}

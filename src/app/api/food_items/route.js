@@ -1,4 +1,3 @@
-// src/app/api/tags/route.js
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 
@@ -59,5 +58,3 @@ export async function DELETE(req, { params }) {
     return NextResponse.json({ error: "Failed to delete tag", details: error.message }, { status: 500 });
   }
 }
-
-

@@ -5,37 +5,47 @@ const prisma = new PrismaClient()
 
 export async function POST(req) {
   try {
-    // Handle form-data instead of JSON
-    const formData = await req.formData()
+    let name;
 
-    // Extract values from form data
-    const serviceItemId = formData.get("serviceItemId")
-    const tagId = formData.get("tagId")
+    // Inspect the Content-Type header
+    const contentType = req.headers.get("content-type");
 
-    // Validate required fields
-    if (!serviceItemId || !tagId) {
-      return NextResponse.json({ error: "serviceItemId and tagId are required" }, { status: 400 })
+    if (contentType && contentType.includes("application/json")) {
+      // Parse as JSON
+      const jsonData = await req.json();
+      name = jsonData.name;
+    } else if (contentType && contentType.includes("multipart/form-data")) {
+      // Parse as FormData
+      const formData = await req.formData();
+      name = formData.get("name");
+    } else {
+      return NextResponse.json(
+        { error: "Unsupported Content-Type" },
+        { status: 400 }
+      );
     }
 
-    // Convert to integers
-    const serviceItemIdInt = Number.parseInt(serviceItemId)
-    const tagIdInt = Number.parseInt(tagId)
-
-    if (isNaN(serviceItemIdInt) || isNaN(tagIdInt)) {
-      return NextResponse.json({ error: "serviceItemId and tagId must be valid numbers" }, { status: 400 })
+    if (!name) {
+      return NextResponse.json(
+        { error: "Tag name is required" },
+        { status: 400 }
+      );
     }
 
-    const serviceItemTag = await prisma.serviceItemTag.create({
+    const tag = await prisma.tag.create({
       data: {
-        serviceItemId: serviceItemIdInt,
-        tagId: tagIdInt,
+        name: name,
       },
-    })
+    });
 
-    return NextResponse.json(serviceItemTag, { status: 201 })
+    return NextResponse.json(tag, { status: 201 });
   } catch (error) {
-    console.error("Error creating service item tag:", error)
-    return NextResponse.json({ error: "Failed to create service item tag", details: error.message }, { status: 500 })
+    console.error("Error creating tag:", error);
+    return NextResponse.json(
+      { error: "Failed to create tag", details: error.message },
+      { status: 500 }
+    );
   }
 }
+
 

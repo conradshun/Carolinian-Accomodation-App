@@ -18,45 +18,52 @@ export default function Home() {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                setFoodData(data);
+
+                if (Array.isArray(data)) {
+                    setFoodData(data);
+                } else if (data?.data && Array.isArray(data.data)) {
+                    setFoodData(data.data);
+                } else {
+                    console.error('Unexpected API response format:', data);
+                    setFoodData([]);
+                }
             } catch (error) {
                 console.error('Error fetching food data:', error);
+                setFoodData([]);
             }
         };
 
         fetchFoodData();
-
     }, []);
 
-    //Implementing search functionality
+    // Make sure these are inside the component!
     const handleSearch = async () => {
       try {
-          const response = await fetch(`/api/search?query=${searchTerm}`); //This will create a request to the search API route to communicate the search term
+          const response = await fetch(`/api/search?query=${searchTerm}`);
           if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
           }
           const results = await response.json();
-          setSearchResults(results); //This will update the search result state based on the validity of the API
+          setSearchResults(results);
       } catch (error) {
           console.error('Error during search:', error);
-          setSearchResults([]); // Clear results on error
+          setSearchResults([]);
       }
-  };
+    };
 
-  const handleTagSearch = async () => {
-    try {
-        const response = await fetch(`/api/tagSearch?query=${searchTagTerm}`); //This will create a request to the search API route to communicate the search term
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const results = await response.json();
-        setTagResults(results); //This will update the search result state based on the validity of the API
-    } catch (error) {
-        console.error('Error during search:', error);
-        setTagResults([]); // Clear results on error
-    }
-};
-    
+    const handleTagSearch = async () => {
+      try {
+          const response = await fetch(`/api/tagSearch?query=${searchTagTerm}`);
+          if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const results = await response.json();
+          setTagResults(results);
+      } catch (error) {
+          console.error('Error during tag search:', error);
+          setTagResults([]);
+      }
+    };
 
     return (
         <div>
@@ -68,9 +75,9 @@ export default function Home() {
                     type="text"
                     placeholder="Search for food..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)} //Every character will cause the state to update
+                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <button onClick={handleSearch}>Search</button> {/* Click the button to call the function to commence the API search */}
+                <button onClick={handleSearch}>Search</button>
             </div>
 
             {/* Display search results */}
@@ -87,18 +94,18 @@ export default function Home() {
                 </div>
             )}
 
-          {/* Search Bar */}
-          <div className="search-bar">
+            {/* Tag Search Bar */}
+            <div className="search-bar">
                 <input
                     type="text"
                     placeholder="Search by tags..."
                     value={searchTagTerm}
-                    onChange={(e) => setSearchTagTerm(e.target.value)} //Every character will cause the state to update
+                    onChange={(e) => setSearchTagTerm(e.target.value)}
                 />
-                <button onClick={handleTagSearch}>Search</button> {/* Click the button to call the function to commence the API search */}
+                <button onClick={handleTagSearch}>Search</button>
             </div>
 
-            {/* Display search results */}
+            {/* Display tag search results */}
             {tagResults.length > 0 && (
                 <div className="search-results">
                     <h2>Search Results:</h2>
@@ -112,10 +119,9 @@ export default function Home() {
                 </div>
             )}
 
-
-            {/*Food Item List */}
+            {/* Food Item List */}
             <ul>
-                {foodData.map((item) => (
+                {foodData?.map((item) => (
                     <FoodItem key={item.id} item={item} />
                 ))}
             </ul>
@@ -160,22 +166,18 @@ function FoodItem({ item }) {
             <br />
             <br />
             {/* Display the tags */}
-      <div>
-        <h2>Tags:</h2>
-        <ul>
-         {item.tags && item.tags.length > 0 ? (
-        <ul>
-          {item.tags.map((foodItemTag) => (
-            <li key={foodItemTag.tag.id}>{foodItemTag.tag.name}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>No tags available</p>
-      )}
-
-        </ul>
-      </div>
-            
+            <div>
+                <h2>Tags:</h2>
+                {item.tags && item.tags.length > 0 ? (
+                    <ul>
+                        {item.tags.map((foodItemTag) => (
+                            <li key={foodItemTag.tag.id}>{foodItemTag.tag.name}</li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p>No tags available</p>
+                )}
+            </div>
         </li>
     );
 }

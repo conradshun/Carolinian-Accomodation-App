@@ -3,42 +3,52 @@ import { NextResponse } from "next/server"
 
 const prisma = new PrismaClient()
 
-export async function POST(req) {
+export async function GET() {
   try {
-    // Handle form-data instead of JSON
-    const formData = await req.formData()
+    const tags = await prisma.tag.findMany()
 
-    // Extract values from form data
-    const foodItemId = formData.get("foodItemId")
-    const tagId = formData.get("tagId")
-
-    // Validate required fields
-    if (!foodItemId || !tagId) {
-      return NextResponse.json({ error: "foodItemId and tagId are required" }, { status: 400 })
+    if (!tags || tags.length === 0) {
+      return NextResponse.json({ tags: [] }, { status: 200 })
     }
-
-    // Convert to integers
-    const foodItemIdInt = Number.parseInt(foodItemId)
-    const tagIdInt = Number.parseInt(tagId)
-
-    if (isNaN(foodItemIdInt) || isNaN(tagIdInt)) {
-      return NextResponse.json({ error: "foodItemId and tagId must be valid numbers" }, { status: 400 })
-    }
-
-    const foodItemTag = await prisma.foodItemTag.create({
-      data: {
-        foodItemId: foodItemIdInt,
-        tagId: tagIdInt,
-      },
-    })
-
-    return NextResponse.json(foodItemTag, { status: 201 })
+    return NextResponse.json(tags, { status: 200 })
   } catch (error) {
-    console.error("Error creating food item tag:", error)
-    return NextResponse.json({ error: "Failed to create food item tag", details: error.message }, { status: 500 })
+    console.error("Error fetching tags:", error)
+    return NextResponse.json({ error: "Failed to fetch food tags", details: error.message }, { status: 500 })
   }
 }
 
+export async function POST(req) {
+  try {
+    let name
 
-//Created a route at `app/api/food_items/tags/route.js` for adding tags to food items
-//
+    // Inspect the Content-Type header
+    const contentType = req.headers.get("content-type")
+
+    if (contentType && contentType.includes("application/json")) {
+      // Parse as JSON
+      const jsonData = await req.json()
+      name = jsonData.name
+    } else if (contentType && contentType.includes("multipart/form-data")) {
+      // Parse as FormData
+      const formData = await req.formData()
+      name = formData.get("name")
+    } else {
+      return NextResponse.json({ error: "Unsupported Content-Type" }, { status: 400 })
+    }
+
+    if (!name) {
+      return NextResponse.json({ error: "Tag name is required" }, { status: 400 })
+    }
+
+    const tag = await prisma.tag.create({
+      data: {
+        name: name,
+      },
+    })
+
+    return NextResponse.json(tag, { status: 201 })
+  } catch (error) {
+    console.error("Error creating tag:", error)
+    return NextResponse.json({ error: "Failed to create tag", details: error.message }, { status: 500 })
+  }
+}

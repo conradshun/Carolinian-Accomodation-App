@@ -20,10 +20,31 @@ export async function GET() {
 
 export async function POST(req) {
   try {
-    const { name } = await req.json();
+    let name;
+
+    // Inspect the Content-Type header
+    const contentType = req.headers.get("content-type");
+
+    if (contentType && contentType.includes("application/json")) {
+      // Parse as JSON
+      const jsonData = await req.json();
+      name = jsonData.name;
+    } else if (contentType && contentType.includes("multipart/form-data")) {
+      // Parse as FormData
+      const formData = await req.formData();
+      name = formData.get("name");
+    } else {
+      return NextResponse.json(
+        { error: "Unsupported Content-Type" },
+        { status: 400 }
+      );
+    }
 
     if (!name) {
-      return NextResponse.json({ error: "leisure tag name is required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Tag name is required" },
+        { status: 400 }
+      );
     }
 
     const tag = await prisma.tag.create({
@@ -35,7 +56,10 @@ export async function POST(req) {
     return NextResponse.json(tag, { status: 201 });
   } catch (error) {
     console.error("Error creating tag:", error);
-    return NextResponse.json({ error: "Failed to create tag", details: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to create tag", details: error.message },
+      { status: 500 }
+    );
   }
 }
 

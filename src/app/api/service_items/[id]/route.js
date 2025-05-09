@@ -1,41 +1,51 @@
-import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client"
+import { NextResponse } from "next/server"
 
+const prisma = new PrismaClient()
 
-const prisma = new PrismaClient();
-
-
-
-export async function GET(req, context) {
+export async function GET(req, { params }) {
   try {
-    const { params } = context;
-    const { id } = params;
+    const { id } = params
 
     const serviceItem = await prisma.serviceItem.findUnique({
-      where: { id: parseInt(id) },
-    });
+      where: { id: Number.parseInt(id) },
+      include: {
+        tags: {
+          include: {
+            tag: true,
+          },
+        },
+      },
+    })
 
     if (!serviceItem) {
-      return NextResponse.json({ error: "Service item not found" }, { status: 404 });
+      return NextResponse.json({ error: "Service item not found" }, { status: 404 })
     }
 
     // Convert the byte array to a regular JavaScript array
     if (serviceItem.image) {
-      serviceItem.image = Array.from(serviceItem.image);
+      serviceItem.image = Array.from(serviceItem.image)
     }
 
-    return NextResponse.json(serviceItem, { status: 200 });
+    // Transform the tags array to a more usable format
+    const transformedServiceItem = {
+      ...serviceItem,
+      tags: serviceItem.tags.map((tagRelation) => ({
+        id: tagRelation.tag.id,
+        name: tagRelation.tag.name,
+      })),
+    }
+
+    return NextResponse.json(transformedServiceItem, { status: 200 })
   } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch service item" }, { status: 500 });
+    console.error("Error fetching service item:", error)
+    return NextResponse.json({ error: "Failed to fetch service item", details: error.message }, { status: 500 })
   }
 }
 
-// Add DELETE functionality
-export async function DELETE(req) {
+export async function DELETE(req, { params }) {
   try {
-    // Get the ID from the URL search params
-    const { searchParams } = new URL(req.url)
-    const id = searchParams.get("id")
+    const { id } = params
 
     if (!id) {
       return NextResponse.json({ error: "ID parameter is required" }, { status: 400 })
@@ -67,4 +77,3 @@ export async function DELETE(req) {
     return NextResponse.json({ error: "Failed to delete service item", details: error.message }, { status: 500 })
   }
 }
-

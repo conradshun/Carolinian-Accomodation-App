@@ -1,40 +1,51 @@
-import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client"
+import { NextResponse } from "next/server"
 
+const prisma = new PrismaClient()
 
-const prisma = new PrismaClient();
-
-
-
-export async function GET(req, context) {
+export async function GET(req, { params }) {
   try {
-    const { params } = context;
-    const { id } = params;
+    const { id } = params
 
     const leisureItem = await prisma.leisureItem.findUnique({
-      where: { id: parseInt(id) },
-    });
+      where: { id: Number.parseInt(id) },
+      include: {
+        tags: {
+          include: {
+            tag: true,
+          },
+        },
+      },
+    })
 
     if (!leisureItem) {
-      return NextResponse.json({ error: "Leisure item not found" }, { status: 404 });
+      return NextResponse.json({ error: "Leisure item not found" }, { status: 404 })
     }
 
     // Convert the byte array to a regular JavaScript array
     if (leisureItem.image) {
-      leisureItem.image = Array.from(leisureItem.image);
+      leisureItem.image = Array.from(leisureItem.image)
     }
 
-    return NextResponse.json(leisureItem, { status: 200 });
+    // Transform the tags array to a more usable format
+    const transformedLeisureItem = {
+      ...leisureItem,
+      tags: leisureItem.tags.map((tagRelation) => ({
+        id: tagRelation.tag.id,
+        name: tagRelation.tag.name,
+      })),
+    }
+
+    return NextResponse.json(transformedLeisureItem, { status: 200 })
   } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch leisure item" }, { status: 500 });
+    console.error("Error fetching leisure item:", error)
+    return NextResponse.json({ error: "Failed to fetch leisure item", details: error.message }, { status: 500 })
   }
 }
 
-export async function DELETE(req) {
+export async function DELETE(req, { params }) {
   try {
-    // Get the ID from the URL search params
-    const { searchParams } = new URL(req.url)
-    const id = searchParams.get("id")
+    const { id } = params
 
     if (!id) {
       return NextResponse.json({ error: "ID parameter is required" }, { status: 400 })

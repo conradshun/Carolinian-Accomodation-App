@@ -1,87 +1,66 @@
-// src/app/api/tags/route.js
-import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client"
+import { NextResponse } from "next/server"
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 export async function GET() {
   try {
-    const tags = await prisma.tag.findMany();
+    const leisureItems = await prisma.leisureItem.findMany()
 
-    if (!tags || tags.length === 0) {
-      return NextResponse.json({ error: "No tags found" }, { status: 200 });
-    }
-    return NextResponse.json(tags, { status: 200 });
+    // Convert byte arrays to regular arrays for all leisure items
+    const processedLeisureItems = leisureItems.map((item) => {
+      if (item.image) {
+        return {
+          ...item,
+          image: Array.from(item.image),
+        }
+      }
+      return item
+    })
+
+    return NextResponse.json(processedLeisureItems, { status: 200 })
   } catch (error) {
-    console.error("Error fetching tags:", error);
-    return NextResponse.json({ error: "Failed to fetch leisure tags", details: error.message }, { status: 500 });
+    console.error("Error fetching leisure items:", error)
+    return NextResponse.json({ error: "Failed to fetch leisure items", details: error.message }, { status: 500 })
   }
 }
 
 export async function POST(req) {
   try {
-    let name;
-
-    // Inspect the Content-Type header
-    const contentType = req.headers.get("content-type");
+    const contentType = req.headers.get("content-type")
+    let data
 
     if (contentType && contentType.includes("application/json")) {
-      // Parse as JSON
-      const jsonData = await req.json();
-      name = jsonData.name;
+      data = await req.json()
     } else if (contentType && contentType.includes("multipart/form-data")) {
-      // Parse as FormData
-      const formData = await req.formData();
-      name = formData.get("name");
+      const formData = await req.formData()
+      data = Object.fromEntries(formData)
+
+      // Handle image if present
+      if (data.image && typeof data.image === "object") {
+        const buffer = await data.image.arrayBuffer()
+        data.image = new Uint8Array(buffer)
+      }
     } else {
-      return NextResponse.json(
-        { error: "Unsupported Content-Type" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Unsupported Content-Type" }, { status: 400 })
     }
 
-    if (!name) {
-      return NextResponse.json(
-        { error: "Tag name is required" },
-        { status: 400 }
-      );
+    if (!data.name) {
+      return NextResponse.json({ error: "Leisure item name is required" }, { status: 400 })
     }
 
-    const tag = await prisma.tag.create({
+    const leisureItem = await prisma.leisureItem.create({
       data: {
-        name: name,
+        name: data.name,
+        description: data.description || null,
+        price: data.price ? Number.parseFloat(data.price) : null,
+        image: data.image || null,
       },
-    });
+    })
 
-    return NextResponse.json(tag, { status: 201 });
+    return NextResponse.json(leisureItem, { status: 201 })
   } catch (error) {
-    console.error("Error creating tag:", error);
-    return NextResponse.json(
-      { error: "Failed to create tag", details: error.message },
-      { status: 500 }
-    );
+    console.error("Error creating leisure item:", error)
+    return NextResponse.json({ error: "Failed to create leisure item", details: error.message }, { status: 500 })
   }
 }
-
-export async function DELETE(req, { params }) {
-  try {
-    const { id } = params;
-
-    if (!id) {
-      return NextResponse.json({ error: "Tag ID is required" }, { status: 400 });
-    }
-
-    const tag = await prisma.tag.delete({
-      where: {
-        id: parseInt(id),
-      },
-    });
-
-    return NextResponse.json({ message: "Tag deleted successfully" }, { status: 200 });
-  } catch (error) {
-    console.error("Error deleting tag:", error);
-    return NextResponse.json({ error: "Failed to delete tag", details: error.message }, { status: 500 });
-  }
-}
-
-

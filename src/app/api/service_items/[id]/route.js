@@ -22,21 +22,21 @@ export async function GET(req, { params }) {
       return NextResponse.json({ error: "Service item not found" }, { status: 404 })
     }
 
+    // Create a processed copy of the item to avoid mutating the original
+    const processedItem = { ...serviceItem }
+
     // Convert the byte array to a regular JavaScript array
-    if (serviceItem.image) {
-      serviceItem.image = Array.from(serviceItem.image)
+    if (processedItem.image) {
+      processedItem.image = Array.from(processedItem.image)
     }
 
     // Transform the tags array to a more usable format
-    const transformedServiceItem = {
-      ...serviceItem,
-      tags: serviceItem.tags.map((tagRelation) => ({
-        id: tagRelation.tag.id,
-        name: tagRelation.tag.name,
-      })),
-    }
+    processedItem.tags = serviceItem.tags.map((tagRelation) => ({
+      id: tagRelation.tag.id,
+      name: tagRelation.tag.name,
+    }))
 
-    return NextResponse.json(transformedServiceItem, { status: 200 })
+    return NextResponse.json(processedItem, { status: 200 })
   } catch (error) {
     console.error("Error fetching service item:", error)
     return NextResponse.json({ error: "Failed to fetch service item", details: error.message }, { status: 500 })

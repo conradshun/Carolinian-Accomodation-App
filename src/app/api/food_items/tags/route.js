@@ -5,15 +5,21 @@ const prisma = new PrismaClient()
 
 export async function GET() {
   try {
-    const tags = await prisma.tag.findMany()
+    const tags = await prisma.tag.findMany({
+      where: {
+        foodItems: {
+          some: {}, // Tags that are associated with at least one food item
+        },
+      },
+    })
 
     if (!tags || tags.length === 0) {
       return NextResponse.json({ tags: [] }, { status: 200 })
     }
     return NextResponse.json(tags, { status: 200 })
   } catch (error) {
-    console.error("Error fetching tags:", error)
-    return NextResponse.json({ error: "Failed to fetch food tags", details: error.message }, { status: 500 })
+    console.error("Error fetching food item tags:", error)
+    return NextResponse.json({ error: "Failed to fetch food item tags", details: error.message }, { status: 500 })
   }
 }
 

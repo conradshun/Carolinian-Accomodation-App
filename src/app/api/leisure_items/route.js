@@ -54,6 +54,8 @@ export async function POST(req) {
         name: data.name,
         description: data.description || null,
         image: data.image || null,
+        directionLink: data.directionLink || null,
+        openHours: data.openHours || null,
       },
     })
 

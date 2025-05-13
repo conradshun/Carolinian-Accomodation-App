@@ -53,7 +53,6 @@ export async function POST(req) {
       data: {
         name: data.name,
         description: data.description || null,
-        price: data.price ? Number.parseFloat(data.price) : null,
         image: data.image || null,
       },
     })

@@ -1,181 +1,247 @@
-"use client";
-import { useEffect, useState } from 'react';
-import React from 'react';
-import Link from 'next/link';
+"use client"
+import { useEffect, useState } from "react"
+import Link from "next/link"
 
-export default function Home() {
-    const [serviceData, setServiceData] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [searchTagTerm, setSearchTagTerm] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
-    const [tagResults, setTagResults] = useState([]);
+export default function ServicePlaces() {
+  const [serviceData, setServiceData] = useState([])
+  const [searchTerm, setSearchTerm] = useState("")
+  const [searchTagTerm, setSearchTagTerm] = useState("")
+  const [searchResults, setSearchResults] = useState([])
+  const [tagResults, setTagResults] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
-    useEffect(() => {
-        const fetchServiceData = async () => {
-            try {
-                const response = await fetch(`/api/service_items?includeTags=true`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                setServiceData(data);
-            } catch (error) {
-                console.error('Error fetching service data:', error);
-            }
-        };
-
-        fetchServiceData();
-
-    }, []);
-
-    //Implementing search functionality
-    const handleSearch = async () => {
+  useEffect(() => {
+    const fetchServiceData = async () => {
       try {
-          const response = await fetch(`/api/search?query=${searchTerm}`); //This will create a request to the search API route to communicate the search term
-          if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          const results = await response.json();
-          setSearchResults(results); //This will update the search result state based on the validity of the API
+        setIsLoading(true)
+        const response = await fetch(`/api/service_items?includeTags=true`)
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        const data = await response.json()
+        setServiceData(Array.isArray(data) ? data : [])
       } catch (error) {
-          console.error('Error during search:', error);
-          setSearchResults([]); // Clear results on error
+        console.error("Error fetching service data:", error)
+        setServiceData([])
+      } finally {
+        setIsLoading(false)
       }
-  };
+    }
+
+    fetchServiceData()
+  }, [])
+
+  const handleSearch = async () => {
+    if (!searchTerm.trim()) return
+
+    try {
+      setIsLoading(true)
+      const response = await fetch(`/api/search?query=${searchTerm}`)
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      const results = await response.json()
+      setSearchResults(results)
+    } catch (error) {
+      console.error("Error during search:", error)
+      setSearchResults([])
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const handleTagSearch = async () => {
+    if (!searchTagTerm.trim()) return
+
     try {
-        const response = await fetch(`/api/tagSearch?query=${searchTagTerm}`); //This will create a request to the search API route to communicate the search term
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const results = await response.json();
-        setTagResults(results); //This will update the search result state based on the validity of the API
+      setIsLoading(true)
+      const response = await fetch(`/api/tagSearch?query=${searchTagTerm}`)
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      const results = await response.json()
+      setTagResults(results)
     } catch (error) {
-        console.error('Error during search:', error);
-        setTagResults([]); // Clear results on error
+      console.error("Error during tag search:", error)
+      setTagResults([])
+    } finally {
+      setIsLoading(false)
     }
-};
-    
+  }
 
-    return (
-        <div>
-            <h1>Service Places</h1>
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8 text-center">Service Places</h1>
 
-            {/* Search Bar */}
-            <div className="search-bar">
-                <input
-                    type="text"
-                    placeholder="Search for service..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)} //Every character will cause the state to update
-                />
-                <button onClick={handleSearch}>Search</button> {/* Click the button to call the function to commence the API search */}
-            </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        {/* Name Search */}
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4">Search by Name</h2>
+          <div className="flex">
+            <input
+              type="text"
+              placeholder="Search for services..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="flex-grow px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+            />
+            <button
+              onClick={handleSearch}
+              className="bg-purple-500 text-white px-4 py-2 rounded-r-lg hover:bg-purple-600 transition duration-200"
+            >
+              Search
+            </button>
+          </div>
 
-            {/* Display search results */}
-            {searchResults.length > 0 && (
-                <div className="search-results">
-                    <h2>Search Results:</h2>
-                    <ul>
-                        {searchResults.map((item) => (
-                            <li key={item.id}>
-                                <Link href={`/service_places/service_items/${item.id}`}>{item.name}</Link>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
-
-          {/* Search Bar */}
-          <div className="search-bar">
-                <input
-                    type="text"
-                    placeholder="Search by tags..."
-                    value={searchTagTerm}
-                    onChange={(e) => setSearchTagTerm(e.target.value)} //Every character will cause the state to update
-                />
-                <button onClick={handleTagSearch}>Search</button> {/* Click the button to call the function to commence the API search */}
-            </div>
-
-            {/* Display search results */}
-            {tagResults.length > 0 && (
-                <div className="search-results">
-                    <h2>Search Results:</h2>
-                    <ul>
-                        {tagResults.map((item) => (
-                            <li key={item.id}>
-                                <Link href={`/service_places/service_items/${item.id}`}>{item.name}</Link>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
-
-
-            {/*service Item List */}
-            <ul>
-                {serviceData.map((item) => (
-                    <ServiceItem key={item.id} item={item} />
+          {/* Display search results */}
+          {searchResults.length > 0 && (
+            <div className="mt-4">
+              <h3 className="font-medium mb-2">Search Results:</h3>
+              <ul className="bg-gray-50 p-3 rounded-md">
+                {searchResults.map((item) => (
+                  <li key={item.id} className="mb-2">
+                    <Link href={`/service_places/service_items/${item.id}`} className="text-purple-600 hover:underline">
+                      {item.name}
+                    </Link>
+                  </li>
                 ))}
-            </ul>
+              </ul>
+            </div>
+          )}
         </div>
-    );
+
+        {/* Tag Search */}
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4">Search by Tags</h2>
+          <div className="flex">
+            <input
+              type="text"
+              placeholder="Search by tags..."
+              value={searchTagTerm}
+              onChange={(e) => setSearchTagTerm(e.target.value)}
+              className="flex-grow px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              onKeyPress={(e) => e.key === "Enter" && handleTagSearch()}
+            />
+            <button
+              onClick={handleTagSearch}
+              className="bg-purple-500 text-white px-4 py-2 rounded-r-lg hover:bg-purple-600 transition duration-200"
+            >
+              Search
+            </button>
+          </div>
+
+          {/* Display tag search results */}
+          {tagResults.length > 0 && (
+            <div className="mt-4">
+              <h3 className="font-medium mb-2">Tag Search Results:</h3>
+              <ul className="bg-gray-50 p-3 rounded-md">
+                {tagResults.map((item) => (
+                  <li key={item.id} className="mb-2">
+                    <Link href={`/service_places/service_items/${item.id}`} className="text-purple-600 hover:underline">
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Service Item List */}
+      <h2 className="text-2xl font-semibold mb-4">All Services</h2>
+
+      {isLoading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+        </div>
+      ) : serviceData.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {serviceData.map((item) => (
+            <ServiceItem key={item.id} item={item} />
+          ))}
+        </div>
+      ) : (
+        <p className="text-center text-gray-500">No services found.</p>
+      )}
+    </div>
+  )
 }
 
-
 function ServiceItem({ item }) {
-    const [imageSrc, setImageSrc] = useState('');
+  const [imageSrc, setImageSrc] = useState("")
 
-    useEffect(() => {
-        if (item?.image) {
-            const byteArray = new Uint8Array(item.image);
-            let binary = '';
-            const len = byteArray.byteLength;
-            for (let i = 0; i < len; i++) {
-                binary += String.fromCharCode(byteArray[i]);
-            }
-            const base64String = btoa(binary);
-            setImageSrc(`data:image/jpeg;base64,${base64String}`);
-        } else {
-            setImageSrc('');
+  useEffect(() => {
+    if (item?.image) {
+      try {
+        const byteArray = new Uint8Array(item.image)
+        let binary = ""
+        const len = byteArray.byteLength
+        for (let i = 0; i < len; i++) {
+          binary += String.fromCharCode(byteArray[i])
         }
-    }, [item.image]);
+        const base64String = btoa(binary)
+        setImageSrc(`data:image/jpeg;base64,${base64String}`)
+      } catch (error) {
+        console.error("Error processing image:", error)
+        setImageSrc("")
+      }
+    } else {
+      setImageSrc("")
+    }
+  }, [item?.image])
 
-    return (
-        <li>
-            <Link href={`/service_places/service_items/${item.id}`}>{item.name}</Link>
-            <br />
-            <Link href={`/service_places/service_items/${item.id}`}>{item.description}</Link>
-            <br />
-            {imageSrc ? (
-                <img className="h-48 w-96 object-cover ..." src={imageSrc} alt={item.name} />
-            ) : (
-                <p>No image available</p>
-            )}
-            <br />
-            <Link href={`/service_places/service_items/${item.id}`}>{item.directionLink}</Link>
-            <br />
-            <Link href={`/service_places/service_items/${item.id}`}>{item.openHours}</Link>
-            <br />
-            <br />
-            {/* Display the tags */}
-      <div>
-        <h2>Tags:</h2>
-        <ul>
-         {item.tags && item.tags.length > 0 ? (
-        <ul>
-          {item.tags.map((serviceItemTag) => (
-            <li key={serviceItemTag.tag.id}>{serviceItemTag.tag.name}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>No tags available</p>
-      )}
+  return (
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+      <Link href={`/service_places/service_items/${item.id}`}>
+        <div className="h-48 bg-gray-200 relative">
+          {imageSrc ? (
+            <img className="w-full h-full object-cover" src={imageSrc || "/placeholder.svg"} alt={item.name} />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gray-200">
+              <span className="text-gray-400">No image available</span>
+            </div>
+          )}
+        </div>
+      </Link>
 
-        </ul>
+      <div className="p-4">
+        <Link href={`/service_places/service_items/${item.id}`}>
+          <h3 className="text-xl font-semibold mb-2 hover:text-purple-500">{item.name}</h3>
+        </Link>
+
+        {item.description && <p className="text-gray-600 mb-3 line-clamp-2">{item.description}</p>}
+
+        {item.openHours && (
+          <p className="text-sm text-gray-500 mb-2">
+            <span className="font-medium">Hours:</span> {item.openHours}
+          </p>
+        )}
+
+        {/* Tags */}
+        {item.tags && item.tags.length > 0 && (
+          <div className="mt-3">
+            <div className="flex flex-wrap gap-1">
+              {item.tags.map((tagRelation) => (
+                <span
+                  key={tagRelation.tag?.id || Math.random()}
+                  className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded"
+                >
+                  {tagRelation.tag?.name || "Unknown"}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <Link
+          href={`/service_places/service_items/${item.id}`}
+          className="mt-4 inline-block text-purple-500 hover:underline"
+        >
+          View Details →
+        </Link>
       </div>
-            
-        </li>
-    );
+    </div>
+  )
 }

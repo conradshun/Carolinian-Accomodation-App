@@ -1,9 +1,9 @@
-'use client'
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
+"use client"
+import { useEffect, useState } from "react"
+import Link from "next/link"
 
 // Custom hook for favorites functionality
-function useFavorites (type) {
+function useFavorites(type) {
   const [favorites, setFavorites] = useState([])
 
   useEffect(() => {
@@ -13,40 +13,38 @@ function useFavorites (type) {
       try {
         setFavorites(JSON.parse(storedFavorites))
       } catch (e) {
-        console.error('Error parsing favorites:', e)
+        console.error("Error parsing favorites:", e)
         setFavorites([])
       }
     }
   }, [type])
 
-  const toggleFavorite = id => {
-    const newFavorites = favorites.includes(id)
-      ? favorites.filter(itemId => itemId !== id)
-      : [...favorites, id]
+  const toggleFavorite = (id) => {
+    const newFavorites = favorites.includes(id) ? favorites.filter((itemId) => itemId !== id) : [...favorites, id]
 
     setFavorites(newFavorites)
     localStorage.setItem(`${type}Favorites`, JSON.stringify(newFavorites))
   }
 
-  const isFavorite = id => favorites.includes(id)
+  const isFavorite = (id) => favorites.includes(id)
 
   return { favorites, toggleFavorite, isFavorite }
 }
 
-export default function ServicePlaces () {
+export default function ServicePlaces() {
   const [serviceData, setServiceData] = useState([])
-  const [searchTerm, setSearchTerm] = useState('')
-  const [searchTagTerm, setSearchTagTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useState("")
+  const [searchTagTerm, setSearchTagTerm] = useState("")
   const [searchResults, setSearchResults] = useState([])
   const [tagResults, setTagResults] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   // Add a new state to track whether we're showing favorites
   const [showingFavorites, setShowingFavorites] = useState(() => {
     // Check localStorage for the saved state
-    const saved = localStorage.getItem('serviceShowingFavorites')
+    const saved = localStorage.getItem("serviceShowingFavorites")
     return saved ? JSON.parse(saved) : false
   })
-  const { favorites, toggleFavorite, isFavorite } = useFavorites('service')
+  const { favorites, toggleFavorite, isFavorite } = useFavorites("service")
 
   const fetchServiceData = async () => {
     try {
@@ -58,7 +56,7 @@ export default function ServicePlaces () {
       const data = await response.json()
       setServiceData(Array.isArray(data) ? data : [])
     } catch (error) {
-      console.error('Error fetching service data:', error)
+      console.error("Error fetching service data:", error)
       setServiceData([])
     } finally {
       setIsLoading(false)
@@ -79,14 +77,12 @@ export default function ServicePlaces () {
 
         // Filter by favorites if needed
         if (showingFavorites && favorites.length > 0) {
-          processedData = processedData.filter(item =>
-            favorites.includes(item.id)
-          )
+          processedData = processedData.filter((item) => favorites.includes(item.id))
         }
 
         setServiceData(processedData)
       } catch (error) {
-        console.error('Error fetching service data:', error)
+        console.error("Error fetching service data:", error)
         setServiceData([])
       } finally {
         setIsLoading(false)
@@ -108,7 +104,7 @@ export default function ServicePlaces () {
       const results = await response.json()
       setSearchResults(results)
     } catch (error) {
-      console.error('Error during search:', error)
+      console.error("Error during search:", error)
       setSearchResults([])
     } finally {
       setIsLoading(false)
@@ -127,7 +123,7 @@ export default function ServicePlaces () {
       const results = await response.json()
       setTagResults(results)
     } catch (error) {
-      console.error('Error during tag search:', error)
+      console.error("Error during tag search:", error)
       setTagResults([])
     } finally {
       setIsLoading(false)
@@ -135,163 +131,299 @@ export default function ServicePlaces () {
   }
 
   return (
-    <div className='container mx-auto px-4 py-8'>
-      <div className='flex justify-between items-center mb-6'>
-        <Link
-          href='/'
-          className='bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-200 flex items-center'
-        >
-          <span className='mr-2'>←</span> Back to Home
-        </Link>
-      </div>
+    <div className="min-h-screen bg-gradient-to-b from-lime-700 via-lime-600 to-yellow-500 relative overflow-hidden">
+      {/* Decorative Elements */}
+      <div className="absolute top-20 left-10 w-20 h-20 rounded-full bg-gradient-to-br from-yellow-300 to-lime-400 opacity-20 animate-float"></div>
+      <div className="absolute top-40 right-20 w-32 h-32 rounded-full bg-gradient-to-tr from-green-600 to-lime-500 opacity-15 animate-float-delay"></div>
+      <div className="absolute bottom-20 left-1/4 w-24 h-24 rounded-full bg-gradient-to-r from-lime-300 to-yellow-400 opacity-20 animate-float-slow"></div>
 
-      <h1 className='text-3xl font-bold mb-8 text-center'>Service Places</h1>
-
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-8'>
-        {/* Name Search */}
-        <div className='bg-white p-4 rounded-lg shadow-md'>
-          <h2 className='text-xl font-semibold mb-4'>Search by Name</h2>
-          <div className='flex'>
-            <input
-              type='text'
-              placeholder='Search for services...'
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              className='flex-grow px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-500'
-              onKeyPress={e => e.key === 'Enter' && handleSearch()}
-            />
-            <button
-              onClick={handleSearch}
-              className='bg-purple-500 text-white px-4 py-2 rounded-r-lg hover:bg-purple-600 transition duration-200'
-            >
-              Search
-            </button>
-          </div>
-
-          {/* Display search results */}
-          {searchResults.length > 0 && (
-            <div className='mt-4'>
-              <h3 className='font-medium mb-2'>Search Results:</h3>
-              <ul className='bg-gray-50 p-3 rounded-md'>
-                {searchResults.map(item => (
-                  <li key={item.id} className='mb-2'>
-                    <Link
-                      href={`/service_places/service_items/${item.id}`}
-                      className='text-purple-600 hover:underline'
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-
-        {/* Tag Search */}
-        <div className='bg-white p-4 rounded-lg shadow-md'>
-          <h2 className='text-xl font-semibold mb-4'>Search by Tags</h2>
-          <div className='flex'>
-            <input
-              type='text'
-              placeholder='Search by tags...'
-              value={searchTagTerm}
-              onChange={e => setSearchTagTerm(e.target.value)}
-              className='flex-grow px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-500'
-              onKeyPress={e => e.key === 'Enter' && handleTagSearch()}
-            />
-            <button
-              onClick={handleTagSearch}
-              className='bg-purple-500 text-white px-4 py-2 rounded-r-lg hover:bg-purple-600 transition duration-200'
-            >
-              Search
-            </button>
-          </div>
-
-          {/* Display tag search results */}
-          {tagResults.length > 0 && (
-            <div className='mt-4'>
-              <h3 className='font-medium mb-2'>Tag Search Results:</h3>
-              <ul className='bg-gray-50 p-3 rounded-md'>
-                {tagResults.map(item => (
-                  <li key={item.id} className='mb-2'>
-                    <Link
-                      href={`/service_places/service_items/${item.id}`}
-                      className='text-purple-600 hover:underline'
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Favorites Filter */}
-      <div className='bg-white p-4 rounded-lg shadow-md mb-8'>
-        <div className='flex items-center justify-between'>
-          <h2 className='text-xl font-semibold'>Your Favorites</h2>
-          <button
-            onClick={() => {
-              // Toggle the showing favorites state
-              const newState = !showingFavorites
-              // Store the state in localStorage
-              localStorage.setItem(
-                'serviceShowingFavorites',
-                JSON.stringify(newState)
-              )
-              // Refresh the page
-              window.location.reload()
-            }}
-            className={`px-4 py-2 rounded-lg transition duration-200 flex items-center ${
-              showingFavorites
-                ? 'bg-purple-500 text-white hover:bg-purple-600'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-            disabled={favorites.length === 0}
+      <div className="container mx-auto px-4 py-8 relative z-10">
+        <div className="flex justify-between items-center mb-6">
+          <Link
+            href="/"
+            className="bg-gradient-to-r from-green-700 to-green-600 text-yellow-300 px-6 py-3 rounded-full hover:from-green-600 hover:to-green-500 transition duration-300 flex items-center shadow-lg transform hover:-translate-y-1 hover:shadow-xl"
           >
-            <span className='mr-2'>{showingFavorites ? '♥' : '♡'}</span>
-            {showingFavorites ? 'Showing Favorites' : 'Show Favorites'}
-          </button>
+            <span className="mr-2">←</span> Back to Home
+          </Link>
         </div>
-        {favorites.length === 0 && (
-          <p className='text-gray-500 mt-2'>
-            You haven't added any favorites yet.
-          </p>
-        )}
+
+        <h1 className="text-4xl font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-green-900 via-green-800 to-green-900 relative">
+          Service Places
+          <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-green-800 via-green-700 to-green-800 rounded-full"></div>
+        </h1>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          {/* Name Search */}
+          <div className="bg-gradient-to-br from-lime-600 to-lime-500 p-6 rounded-xl shadow-lg border border-green-700 transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <h2 className="text-xl font-semibold mb-4 text-green-900 flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+              Search by Name
+            </h2>
+            <div className="flex">
+              <input
+                type="text"
+                placeholder="Search for services..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="flex-grow px-4 py-3 rounded-l-full focus:outline-none focus:ring-2 focus:ring-green-700 bg-green-50 border-2 border-green-700"
+                onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+              />
+              <button
+                onClick={handleSearch}
+                className="bg-gradient-to-r from-green-700 to-green-600 text-yellow-300 px-6 py-3 rounded-r-full hover:from-green-600 hover:to-green-500 transition duration-300 font-medium transform hover:scale-105"
+              >
+                Search
+              </button>
+            </div>
+
+            {/* Display search results */}
+            {searchResults.length > 0 && (
+              <div className="mt-4">
+                <h3 className="font-medium mb-2 text-green-900 flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 mr-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                  Search Results:
+                </h3>
+                <ul className="bg-lime-500 bg-opacity-50 p-4 rounded-lg border border-green-700">
+                  {searchResults.map((item) => (
+                    <li key={item.id} className="mb-2 transform transition-transform hover:translate-x-1">
+                      <Link
+                        href={`/service_places/service_items/${item.id}`}
+                        className="text-green-900 hover:underline flex items-center font-medium"
+                      >
+                        <span className="mr-2">•</span> {item.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          {/* Tag Search */}
+          <div className="bg-gradient-to-br from-lime-600 to-lime-500 p-6 rounded-xl shadow-lg border border-green-700 transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <h2 className="text-xl font-semibold mb-4 text-green-900 flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                />
+              </svg>
+              Search by Tags
+            </h2>
+            <div className="flex">
+              <input
+                type="text"
+                placeholder="Search by tags..."
+                value={searchTagTerm}
+                onChange={(e) => setSearchTagTerm(e.target.value)}
+                className="flex-grow px-4 py-3 rounded-l-full focus:outline-none focus:ring-2 focus:ring-green-700 bg-green-50 border-2 border-green-700"
+                onKeyPress={(e) => e.key === "Enter" && handleTagSearch()}
+              />
+              <button
+                onClick={handleTagSearch}
+                className="bg-gradient-to-r from-green-700 to-green-600 text-yellow-300 px-6 py-3 rounded-r-full hover:from-green-600 hover:to-green-500 transition duration-300 font-medium transform hover:scale-105"
+              >
+                Search
+              </button>
+            </div>
+
+            {/* Display tag search results */}
+            {tagResults.length > 0 && (
+              <div className="mt-4">
+                <h3 className="font-medium mb-2 text-green-900 flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 mr-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                  Tag Search Results:
+                </h3>
+                <ul className="bg-lime-500 bg-opacity-50 p-4 rounded-lg border border-green-700">
+                  {tagResults.map((item) => (
+                    <li key={item.id} className="mb-2 transform transition-transform hover:translate-x-1">
+                      <Link
+                        href={`/service_places/service_items/${item.id}`}
+                        className="text-green-900 hover:underline flex items-center font-medium"
+                      >
+                        <span className="mr-2">•</span> {item.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Favorites Filter */}
+        <div className="bg-gradient-to-r from-lime-600 to-lime-500 p-6 rounded-xl shadow-lg mb-8 border border-green-700 transform transition-all duration-300 hover:shadow-xl">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-green-900 flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 mr-2 text-green-900"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+              Your Favorites
+            </h2>
+            <button
+              onClick={() => {
+                // Toggle the showing favorites state
+                const newState = !showingFavorites
+                // Store the state in localStorage
+                localStorage.setItem("serviceShowingFavorites", JSON.stringify(newState))
+                // Refresh the page
+                window.location.reload()
+              }}
+              className={`px-6 py-3 rounded-full transition duration-300 flex items-center transform hover:scale-105 ${
+                showingFavorites
+                  ? "bg-gradient-to-r from-green-700 to-green-600 text-yellow-300 hover:from-green-600 hover:to-green-500 shadow-md hover:shadow-lg"
+                  : "bg-gradient-to-r from-lime-500 to-lime-400 text-green-900 hover:from-lime-400 hover:to-lime-300 shadow-md hover:shadow-lg"
+              }`}
+              disabled={favorites.length === 0}
+            >
+              <span className={`mr-2 text-xl ${showingFavorites ? "animate-pulse" : ""}`}>
+                {showingFavorites ? "♥" : "♡"}
+              </span>
+              {showingFavorites ? "Showing Favorites" : "Show Favorites"}
+            </button>
+          </div>
+          {favorites.length === 0 && (
+            <div className="text-green-900 mt-4 bg-lime-500 bg-opacity-50 p-4 rounded-lg border border-green-700 flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 mr-2 text-green-900"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              You haven't added any favorites yet. Click the heart icon on any service to add it to your favorites!
+            </div>
+          )}
+        </div>
+
+        {/* Service Item List */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-green-900 to-green-800 flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-7 w-7 mr-2 text-green-900"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              />
+            </svg>
+            All Services
+          </h2>
+
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="relative">
+                <div className="w-16 h-16 border-4 border-green-700 border-t-green-900 rounded-full animate-spin"></div>
+                <div className="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-green-800 rounded-full animate-spin-slow"></div>
+              </div>
+            </div>
+          ) : serviceData.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {serviceData.map((item) => (
+                <ServiceItem key={item.id} item={item} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-green-900 bg-gradient-to-r from-lime-600 to-lime-500 p-8 rounded-xl shadow-lg border border-green-700">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-12 w-12 mx-auto mb-4 text-green-900"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <p className="text-xl">No services found.</p>
+              <p className="mt-2 text-green-800">Try a different search or check back later!</p>
+            </div>
+          )}
+        </div>
+
+        {/* Decorative footer element */}
+        <div className="mt-12 flex justify-center">
+          <div className="w-32 h-1 bg-gradient-to-r from-green-800 via-green-700 to-green-800 rounded-full"></div>
+        </div>
       </div>
-
-      {/* Service Item List */}
-      <h2 className='text-2xl font-semibold mb-4'>All Services</h2>
-
-      {isLoading ? (
-        <div className='flex justify-center items-center h-64'>
-          <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500'></div>
-        </div>
-      ) : serviceData.length > 0 ? (
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-          {serviceData.map(item => (
-            <ServiceItem key={item.id} item={item} />
-          ))}
-        </div>
-      ) : (
-        <p className='text-center text-gray-500'>No services found.</p>
-      )}
     </div>
   )
 }
 
-function ServiceItem ({ item }) {
-  const [imageSrc, setImageSrc] = useState('')
-  const { isFavorite, toggleFavorite } = useFavorites('service')
+function ServiceItem({ item }) {
+  const [imageSrc, setImageSrc] = useState("")
+  const { isFavorite, toggleFavorite } = useFavorites("service")
 
   useEffect(() => {
     if (item?.image) {
       try {
         const byteArray = new Uint8Array(item.image)
-        let binary = ''
+        let binary = ""
         const len = byteArray.byteLength
         for (let i = 0; i < len; i++) {
           binary += String.fromCharCode(byteArray[i])
@@ -299,77 +431,96 @@ function ServiceItem ({ item }) {
         const base64String = btoa(binary)
         setImageSrc(`data:image/jpeg;base64,${base64String}`)
       } catch (error) {
-        console.error('Error processing image:', error)
-        setImageSrc('')
+        console.error("Error processing image:", error)
+        setImageSrc("")
       }
     } else {
-      setImageSrc('')
+      setImageSrc("")
     }
   }, [item?.image])
 
   return (
-    <div className='bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300'>
-      <div className='relative'>
+    <div className="bg-gradient-to-br from-lime-600 to-lime-500 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-500 border border-green-700 transform hover:-translate-y-2 hover:scale-102 group card-hover">
+      <div className="relative">
         <Link href={`/service_places/service_items/${item.id}`}>
-          <div className='h-48 bg-gray-200 relative'>
+          <div className="h-48 bg-lime-700 relative overflow-hidden group-hover:h-52 transition-all duration-500">
             {imageSrc ? (
               <img
-                className='w-full h-full object-cover'
-                src={imageSrc || '/placeholder.svg'}
+                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                src={imageSrc || "/placeholder.svg"}
                 alt={item.name}
               />
             ) : (
-              <div className='w-full h-full flex items-center justify-center bg-gray-200'>
-                <span className='text-gray-400'>No image available</span>
+              <div className="w-full h-full flex items-center justify-center bg-lime-700">
+                <span className="text-lime-300">No image available</span>
               </div>
             )}
+            <div className="absolute inset-0 bg-gradient-to-t from-lime-700 to-transparent opacity-60"></div>
           </div>
         </Link>
         <button
-          onClick={e => {
+          onClick={(e) => {
             e.preventDefault()
             toggleFavorite(item.id)
           }}
-          className='absolute top-2 right-2 p-2 bg-white bg-opacity-80 rounded-full shadow-md hover:bg-opacity-100 transition-all'
-          aria-label={
-            isFavorite(item.id) ? 'Remove from favorites' : 'Add to favorites'
-          }
+          className="absolute top-3 right-3 p-3 bg-green-800 bg-opacity-80 rounded-full shadow-md hover:bg-opacity-100 transition-all transform hover:scale-110 hover:rotate-12 z-10"
+          aria-label={isFavorite(item.id) ? "Remove from favorites" : "Add to favorites"}
         >
           {isFavorite(item.id) ? (
-            <span className='text-red-500 text-xl'>♥</span>
+            <span className="text-yellow-300 text-xl animate-pulse">♥</span>
           ) : (
-            <span className='text-gray-400 text-xl hover:text-red-500'>♡</span>
+            <span className="text-green-100 text-xl hover:text-yellow-300">♡</span>
           )}
         </button>
+
+        {/* Decorative badge */}
+        <div className="absolute top-3 left-3 bg-gradient-to-r from-green-700 to-green-600 text-yellow-300 text-xs px-3 py-1 rounded-full shadow-md transform -rotate-12 animate-pulse-slow">
+          Service
+        </div>
       </div>
 
-      <div className='p-4'>
+      <div className="p-5 relative">
+        {/* Decorative elements */}
+        <div className="absolute -top-1 right-0 w-12 h-12 bg-green-900 opacity-5 rounded-full transform group-hover:scale-150 transition-transform duration-700"></div>
+
         <Link href={`/service_places/service_items/${item.id}`}>
-          <h3 className='text-xl font-semibold mb-2 hover:text-purple-500'>
+          <h3 className="text-xl font-semibold mb-2 text-green-900 group-hover:text-green-800 transition-colors duration-300">
             {item.name}
           </h3>
         </Link>
 
-        {item.description && (
-          <p className='text-gray-600 mb-3 line-clamp-2'>{item.description}</p>
-        )}
+        {item.description && <p className="text-green-800 mb-3 line-clamp-2">{item.description}</p>}
 
         {item.openHours && (
-          <p className='text-sm text-gray-500 mb-2'>
-            <span className='font-medium'>Hours:</span> {item.openHours}
+          <p className="text-sm text-green-800 mb-3 flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4 mr-1 text-green-900"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span className="font-medium text-green-900">Hours:</span> {item.openHours}
           </p>
         )}
 
         {/* Tags */}
         {item.tags && item.tags.length > 0 && (
-          <div className='mt-3'>
-            <div className='flex flex-wrap gap-1'>
-              {item.tags.map(tagRelation => (
+          <div className="mt-3">
+            <div className="flex flex-wrap gap-2">
+              {item.tags.map((tagRelation) => (
                 <span
                   key={tagRelation.tag?.id || Math.random()}
-                  className='bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded'
+                  className="bg-gradient-to-r from-green-700 to-green-600 text-yellow-300 text-xs px-3 py-1 rounded-full border border-green-600 transform transition-transform hover:scale-105"
                 >
-                  {tagRelation.tag?.name || 'Unknown'}
+                  {tagRelation.tag?.name || "Unknown"}
                 </span>
               ))}
             </div>
@@ -378,9 +529,18 @@ function ServiceItem ({ item }) {
 
         <Link
           href={`/service_places/service_items/${item.id}`}
-          className='mt-4 inline-block text-purple-500 hover:underline'
+          className="mt-4 inline-block text-green-900 hover:text-green-800 transition-colors duration-300 group-hover:translate-x-1 transform transition-transform flex items-center font-medium"
         >
-          View Details →
+          View Details
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-4 ml-1 group-hover:ml-2 transition-all duration-300"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
         </Link>
       </div>
     </div>

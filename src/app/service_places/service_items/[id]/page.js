@@ -76,6 +76,14 @@ export default function ServiceItemDetails() {
   }, [id])
 
   useEffect(() => {
+    if (serviceItem && serviceItem.name) {
+      document.title = `${serviceItem.name} | Tultool Services`
+    } else {
+      document.title = "Service Details | Tultool"
+    }
+  }, [serviceItem])
+
+  useEffect(() => {
     if (serviceItem && serviceItem.image) {
       try {
         const byteArray = new Uint8Array(serviceItem.image)

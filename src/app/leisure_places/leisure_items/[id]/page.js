@@ -95,6 +95,14 @@ export default function LeisureItemDetails() {
     }
   }, [leisureItem])
 
+  useEffect(() => {
+    if (leisureItem && leisureItem.name) {
+      document.title = `${leisureItem.name} | Tultool Leisure`
+    } else {
+      document.title = "Leisure Details | Tultool"
+    }
+  }, [leisureItem])
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-green-900 via-green-800 to-green-700 flex justify-center items-center">

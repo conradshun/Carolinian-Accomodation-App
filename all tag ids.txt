@@ -1,0 +1,142 @@
+[
+    {
+        "id": 34,
+        "name": "Architecture & Design"
+    },
+    {
+        "id": 23,
+        "name": "Billiards"
+    },
+    {
+        "id": 9,
+        "name": "Chicken"
+    },
+    {
+        "id": 25,
+        "name": "Co-Working Space"
+    },
+    {
+        "id": 10,
+        "name": "Coffee"
+    },
+    {
+        "id": 29,
+        "name": "Convenience Stores"
+    },
+    {
+        "id": 31,
+        "name": "Creative Spaces"
+    },
+    {
+        "id": 7,
+        "name": "Dessert"
+    },
+    {
+        "id": 14,
+        "name": "Dimsum"
+    },
+    {
+        "id": 8,
+        "name": "Fast Food"
+    },
+    {
+        "id": 13,
+        "name": "Filipino Food"
+    },
+    {
+        "id": 20,
+        "name": "French Fries & Snacks"
+    },
+    {
+        "id": 32,
+        "name": "Gadgets & Electronics"
+    },
+    {
+        "id": 21,
+        "name": "Gaming Café"
+    },
+    {
+        "id": 24,
+        "name": "Gym"
+    },
+    {
+        "id": 30,
+        "name": "Health & Wellness"
+    },
+    {
+        "id": 6,
+        "name": "Indian food"
+    },
+    {
+        "id": 18,
+        "name": "Italian & Persian Cuisine"
+    },
+    {
+        "id": 17,
+        "name": "Japanese Food"
+    },
+    {
+        "id": 5,
+        "name": "jollibee"
+    },
+    {
+        "id": 4,
+        "name": "KFC"
+    },
+    {
+        "id": 38,
+        "name": "Korean Convenience Stores"
+    },
+    {
+        "id": 16,
+        "name": "Korean Food"
+    },
+    {
+        "id": 36,
+        "name": "Laundry & Cleaning"
+    },
+    {
+        "id": 11,
+        "name": "Meat"
+    },
+    {
+        "id": 12,
+        "name": "Milk Tea & Refreshments"
+    },
+    {
+        "id": 35,
+        "name": "Motorcycle Services"
+    },
+    {
+        "id": 22,
+        "name": "Park"
+    },
+    {
+        "id": 15,
+        "name": "Pizza & Sandwiches"
+    },
+    {
+        "id": 28,
+        "name": "Printing & Graphic Design"
+    },
+    {
+        "id": 27,
+        "name": "School & Office Supplies"
+    },
+    {
+        "id": 19,
+        "name": "Shawarma & Baked Goods"
+    },
+    {
+        "id": 26,
+        "name": "Store"
+    },
+    {
+        "id": 33,
+        "name": "Travel & Tourism"
+    },
+    {
+        "id": 37,
+        "name": "Water Services"
+    }
+]

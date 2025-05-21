@@ -115,7 +115,10 @@ export default function LeisurePlaces() {
   }, [showingFavorites, favorites])
 
   const handleSearch = async () => {
-    if (!searchTerm.trim()) return
+    if (!searchTerm.trim()) {
+      setSearchResults([])
+      return
+    }
 
     try {
       setIsLoading(true)
@@ -133,12 +136,30 @@ export default function LeisurePlaces() {
     }
   }
 
+  // Replace the handleTagSearch function with this improved version that handles multiple tags
   const handleTagSearch = async () => {
-    if (!searchTagTerm.trim()) return
+    if (!searchTagTerm.trim()) {
+      setTagResults([])
+      return
+    }
 
     try {
       setIsLoading(true)
-      const response = await fetch(`/api/tagSearch?query=${searchTagTerm}`)
+      // Split the search term by commas to handle multiple tags
+      const tags = searchTagTerm
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter((tag) => tag)
+
+      if (tags.length === 0) {
+        setTagResults([])
+        return
+      }
+
+      // Join the tags with a comma for the API query
+      const tagsQuery = tags.join(",")
+      const response = await fetch(`/api/tagSearch?query=${tagsQuery}`)
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
@@ -212,34 +233,41 @@ export default function LeisurePlaces() {
             </div>
 
             {/* Display search results */}
-            {searchResults.length > 0 && (
-              <div className="mt-4">
-                <h3 className="font-medium mb-2 text-green-900 flex items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 mr-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                  Search Results:
-                </h3>
-                <ul className="bg-lime-500 bg-opacity-50 p-4 rounded-lg border border-green-700">
-                  {searchResults.map((item) => (
-                    <li key={item.id} className="mb-2 transform transition-transform hover:translate-x-1">
-                      <Link
-                        href={`/leisure_places/leisure_items/${item.id}`}
-                        className="text-green-900 hover:underline flex items-center font-medium"
-                      >
-                        <span className="mr-2">•</span> {item.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+            <div
+              className="mt-4 overflow-hidden transition-all duration-300"
+              style={{ maxHeight: searchResults.length > 0 ? "300px" : "0" }}
+            >
+              <h3 className="font-medium mb-2 text-green-900 flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+                Search Results:
+              </h3>
+              <div className="bg-lime-500 bg-opacity-50 p-4 rounded-lg border border-green-700 max-h-60 overflow-y-auto">
+                {searchResults.length > 0 ? (
+                  <ul>
+                    {searchResults.map((item) => (
+                      <li key={item.id} className="mb-2 transform transition-transform hover:translate-x-1">
+                        <Link
+                          href={`/leisure_places/leisure_items/${item.id}`}
+                          className="text-green-900 hover:underline flex items-center font-medium"
+                        >
+                          <span className="mr-2">•</span> {item.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-green-800 italic">No results found. Try a different search term.</p>
+                )}
               </div>
-            )}
+            </div>
           </div>
 
           {/* Tag Search */}
@@ -264,7 +292,7 @@ export default function LeisurePlaces() {
             <div className="flex">
               <input
                 type="text"
-                placeholder="Search by tags..."
+                placeholder="Search by tags (separate with commas)..."
                 value={searchTagTerm}
                 onChange={(e) => setSearchTagTerm(e.target.value)}
                 className="flex-grow px-4 py-3 rounded-l-full focus:outline-none focus:ring-2 focus:ring-green-700 bg-white text-green-800 border-2 border-green-700 shadow-inner"
@@ -279,34 +307,41 @@ export default function LeisurePlaces() {
             </div>
 
             {/* Display tag search results */}
-            {tagResults.length > 0 && (
-              <div className="mt-4">
-                <h3 className="font-medium mb-2 text-green-900 flex items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 mr-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                  Tag Search Results:
-                </h3>
-                <ul className="bg-lime-500 bg-opacity-50 p-4 rounded-lg border border-green-700">
-                  {tagResults.map((item) => (
-                    <li key={item.id} className="mb-2 transform transition-transform hover:translate-x-1">
-                      <Link
-                        href={`/leisure_places/leisure_items/${item.id}`}
-                        className="text-green-900 hover:underline flex items-center font-medium"
-                      >
-                        <span className="mr-2">•</span> {item.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+            <div
+              className="mt-4 overflow-hidden transition-all duration-300"
+              style={{ maxHeight: tagResults.length > 0 ? "300px" : "0" }}
+            >
+              <h3 className="font-medium mb-2 text-green-900 flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+                Tag Search Results:
+              </h3>
+              <div className="bg-lime-500 bg-opacity-50 p-4 rounded-lg border border-green-700 max-h-60 overflow-y-auto">
+                {tagResults.length > 0 ? (
+                  <ul>
+                    {tagResults.map((item) => (
+                      <li key={item.id} className="mb-2 transform transition-transform hover:translate-x-1">
+                        <Link
+                          href={`/leisure_places/leisure_items/${item.id}`}
+                          className="text-green-900 hover:underline flex items-center font-medium"
+                        >
+                          <span className="mr-2">•</span> {item.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-green-800 italic">No results found. Try different tags.</p>
+                )}
               </div>
-            )}
+            </div>
           </div>
         </div>
 
@@ -368,7 +403,8 @@ export default function LeisurePlaces() {
                   d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              You haven't added any favorites yet. Click the heart icon on any leisure place to add it to your favorites!
+              You haven't added any favorites yet. Click the heart icon on any leisure place to add it to your
+              favorites!
             </div>
           )}
         </div>

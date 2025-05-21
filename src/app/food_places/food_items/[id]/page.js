@@ -76,6 +76,14 @@ export default function FoodItemDetails() {
   }, [id])
 
   useEffect(() => {
+    if (foodItem && foodItem.name) {
+      document.title = `${foodItem.name} | Tultool Food`
+    } else {
+      document.title = "Food Details | Tultool"
+    }
+  }, [foodItem])
+
+  useEffect(() => {
     if (foodItem && foodItem.image) {
       try {
         const byteArray = new Uint8Array(foodItem.image)

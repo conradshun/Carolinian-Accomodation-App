@@ -1,7 +1,6 @@
 "use client"
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import Head from "next/head"
 
 export default function HomePage() {
   const [foodCount, setFoodCount] = useState(0)
@@ -12,7 +11,7 @@ export default function HomePage() {
   useEffect(() => {
     // Set the document title
     document.title = "Tultool"
-    
+
     const fetchCounts = async () => {
       try {
         setIsLoading(true)
@@ -86,7 +85,13 @@ export default function HomePage() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                  d="M12 4.5a2.5 2.5 0 00-2.5 2.5v2h5v-2A2.5 2.5 0 0012 4.5zM5 10v1h14v-1c0-2.66-5.33-4-7-4s-7 1.34-7 4z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 14v7M16 14v7M4 10h16v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4z"
                 />
               </svg>
             }
@@ -113,7 +118,7 @@ export default function HomePage() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                  d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
             }
@@ -142,6 +147,7 @@ export default function HomePage() {
                   strokeWidth={2}
                   d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                 />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v2M3 12h2m14 0h2M12 19v2" />
               </svg>
             }
             isLoading={isLoading}
@@ -153,9 +159,10 @@ export default function HomePage() {
             About Tultool
           </h2>
           <p className="text-gray-700 max-w-3xl mx-auto">
-            Tultool is your go-to campus companion, designed to help students and visitors discover the best places around USC. 
-            Whether you're craving a delicious meal, looking for a spot to relax between classes, or need to find essential services, 
-            Tultool has got you covered. Explore, save your favorites, and make the most of your campus experience!
+            Tultool is your go-to campus companion, designed to help students and visitors discover the best places
+            around USC. Whether you're craving a delicious meal, looking for a spot to relax between classes, or need to
+            find essential services, Tultool has got you covered. Explore, save your favorites, and make the most of
+            your campus experience!
           </p>
 
           <div className="mt-12 flex justify-center space-x-4">

@@ -3,47 +3,64 @@ import { NextResponse } from "next/server"
 
 const prisma = new PrismaClient()
 
-export async function GET(request) {
+export async function GET(req) {
   try {
-    // This endpoint doesn't have an ID parameter, so we don't need to access context.params
+    const url = new URL(req.url)
+    const type = url.searchParams.get("type") // 'food', 'leisure', or 'service'
+
+    let whereClause = {}
+
+    // If type is specified, filter tags by that type
+    if (type) {
+      if (type === "food") {
+        whereClause = {
+          foodItems: {
+            some: {},
+          },
+        }
+      } else if (type === "leisure") {
+        whereClause = {
+          leisureItems: {
+            some: {},
+          },
+        }
+      } else if (type === "service") {
+        whereClause = {
+          serviceItems: {
+            some: {},
+          },
+        }
+      }
+    }
+
     const tags = await prisma.tag.findMany({
-      where: {
-        foodItems: {
-          some: {}, // Tags that are associated with at least one food item
-        },
-      },
+      where: whereClause,
     })
 
     if (!tags || tags.length === 0) {
       return NextResponse.json({ tags: [] }, { status: 200 })
     }
-
-    // Return tags in a consistent format
-    const formattedTags = tags.map((tag) => ({
-      id: tag.id,
-      name: tag.name,
-    }))
-
-    return NextResponse.json(formattedTags, { status: 200 })
+    return NextResponse.json(tags, { status: 200 })
   } catch (error) {
-    console.error("Error fetching food item tags:", error)
-    return NextResponse.json({ error: "Failed to fetch food item tags", details: error.message }, { status: 500 })
+    console.error("Error fetching tags:", error)
+    return NextResponse.json({ error: "Failed to fetch tags", details: error.message }, { status: 500 })
   }
 }
 
-export async function POST(request) {
+export async function POST(req) {
   try {
-    // This endpoint doesn't have an ID parameter, so we don't need to access context.params
-
-    // Parse request body
-    const contentType = request.headers.get("content-type")
     let name
 
+    // Inspect the Content-Type header
+    const contentType = req.headers.get("content-type")
+
     if (contentType && contentType.includes("application/json")) {
-      const data = await request.json()
-      name = data.name
+      // Parse as JSON
+      const jsonData = await req.json()
+      name = jsonData.name
     } else if (contentType && contentType.includes("multipart/form-data")) {
-      const formData = await request.formData()
+      // Parse as FormData
+      const formData = await req.formData()
       name = formData.get("name")
     } else {
       return NextResponse.json({ error: "Unsupported Content-Type" }, { status: 400 })
@@ -70,29 +87,19 @@ export async function POST(request) {
       return NextResponse.json(
         {
           message: "Tag already exists",
-          tag: {
-            id: existingTag.id,
-            name: existingTag.name,
-          },
+          tag: existingTag,
         },
         { status: 200 },
       )
     }
 
-    // Create the tag
     const tag = await prisma.tag.create({
       data: {
         name: name,
       },
     })
 
-    return NextResponse.json(
-      {
-        id: tag.id,
-        name: tag.name,
-      },
-      { status: 201 },
-    )
+    return NextResponse.json(tag, { status: 201 })
   } catch (error) {
     console.error("Error creating tag:", error)
     return NextResponse.json({ error: "Failed to create tag", details: error.message }, { status: 500 })

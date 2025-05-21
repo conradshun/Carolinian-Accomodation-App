@@ -48,7 +48,7 @@ export default function ServicePlaces() {
 
   useEffect(() => {
     // Set the document title
-    document.title = "Tultool Service!"
+    document.title = "Tultool Services!"
   }, [])
 
   // Also add the fetchServiceData function to make it reusable
@@ -153,31 +153,31 @@ export default function ServicePlaces() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#2A3424] via-[#4D6647] to-[#B5C4B1] relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-yellow-500 via-yellow-400 to-yellow-300 relative overflow-hidden">
       {/* Decorative Elements */}
-      <div className="absolute top-20 left-10 w-20 h-20 rounded-full bg-gradient-to-br from-[#FFBA30] to-[#F9E4B7] opacity-20 animate-float"></div>
-      <div className="absolute top-40 right-20 w-32 h-32 rounded-full bg-gradient-to-tr from-[#4D6647] to-[#B5C4B1] opacity-15 animate-float-delay"></div>
-      <div className="absolute bottom-20 left-1/4 w-24 h-24 rounded-full bg-gradient-to-r from-[#B5C4B1] to-[#FFBA30] opacity-20 animate-float-slow"></div>
+      <div className="absolute top-20 left-10 w-20 h-20 rounded-full bg-gradient-to-br from-yellow-300 to-lime-400 opacity-20 animate-float"></div>
+      <div className="absolute top-40 right-20 w-32 h-32 rounded-full bg-gradient-to-tr from-green-600 to-lime-500 opacity-15 animate-float-delay"></div>
+      <div className="absolute bottom-20 left-1/4 w-24 h-24 rounded-full bg-gradient-to-r from-lime-300 to-yellow-400 opacity-20 animate-float-slow"></div>
 
       <div className="container mx-auto px-4 py-8 relative z-10">
         <div className="flex justify-between items-center mb-6">
           <Link
             href="/"
-            className="bg-gradient-to-r from-[#4D6647] to-[#2A3424] text-[#FFBA30] px-6 py-3 rounded-full hover:from-[#2A3424] hover:to-[#4D6647] transition duration-300 flex items-center shadow-lg transform hover:-translate-y-1 hover:shadow-xl"
+            className="bg-gradient-to-r from-green-700 to-green-600 text-yellow-300 px-6 py-3 rounded-full hover:from-green-600 hover:to-green-500 transition duration-300 flex items-center shadow-lg transform hover:-translate-y-1 hover:shadow-xl"
           >
             <span className="mr-2">←</span> Back to Home
           </Link>
         </div>
 
-        <h1 className="text-5xl font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-[#FFBA30] via-[#F9E4B7] to-[#FFBA30] relative animate-pulse-slow">
+        <h1 className="text-5xl font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-green-900 via-green-800 to-green-900 relative animate-pulse-slow">
           Tultool Services
-          <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-40 h-2 bg-gradient-to-r from-[#4D6647] via-[#B5C4B1] to-[#FFBA30] rounded-full"></div>
+          <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-40 h-2 bg-gradient-to-r from-green-800 via-green-700 to-green-800 rounded-full"></div>
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {/* Name Search */}
-          <div className="bg-gradient-to-br from-[#4D6647] to-[#B5C4B1] p-6 rounded-2xl shadow-xl transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-            <h2 className="text-xl font-semibold mb-4 text-[#FFBA30] flex items-center">
+          <div className="bg-gradient-to-br from-yellow-500 to-yellow-400 p-6 rounded-2xl shadow-xl transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+            <h2 className="text-xl font-semibold mb-4 text-green-900 flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 mr-2"
@@ -200,12 +200,12 @@ export default function ServicePlaces() {
                 placeholder="Search for services..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="flex-grow px-4 py-3 rounded-l-full focus:outline-none focus:ring-2 focus:ring-[#FFBA30] bg-white text-[#2A3424] border-2 border-[#2A3424] shadow-inner"
+                className="flex-grow px-4 py-3 rounded-l-full focus:outline-none focus:ring-2 focus:ring-green-700 bg-white text-green-800 border-2 border-green-700 shadow-inner"
                 onKeyPress={(e) => e.key === "Enter" && handleSearch()}
               />
               <button
                 onClick={handleSearch}
-                className="bg-gradient-to-r from-[#2A3424] to-[#4D6647] text-[#FFBA30] px-6 py-3 rounded-r-full hover:from-[#4D6647] hover:to-[#2A3424] transition duration-300 font-medium transform hover:scale-105"
+                className="bg-gradient-to-r from-green-700 to-green-600 text-yellow-300 px-6 py-3 rounded-r-full hover:from-green-600 hover:to-green-500 transition duration-300 font-medium transform hover:scale-105"
               >
                 Search
               </button>
@@ -214,7 +214,7 @@ export default function ServicePlaces() {
             {/* Display search results */}
             {searchResults.length > 0 && (
               <div className="mt-4">
-                <h3 className="font-medium mb-2 text-[#F9E4B7] flex items-center">
+                <h3 className="font-medium mb-2 text-green-900 flex items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-4 w-4 mr-1"
@@ -226,12 +226,12 @@ export default function ServicePlaces() {
                   </svg>
                   Search Results:
                 </h3>
-                <ul className="bg-[#4D6647] bg-opacity-50 p-4 rounded-lg border border-[#2A3424]">
+                <ul className="bg-yellow-400 bg-opacity-50 p-4 rounded-lg border border-green-700">
                   {searchResults.map((item) => (
                     <li key={item.id} className="mb-2 transform transition-transform hover:translate-x-1">
                       <Link
                         href={`/service_places/service_items/${item.id}`}
-                        className="text-[#FFBA30] hover:underline flex items-center font-medium"
+                        className="text-green-900 hover:underline flex items-center font-medium"
                       >
                         <span className="mr-2">•</span> {item.name}
                       </Link>
@@ -243,8 +243,8 @@ export default function ServicePlaces() {
           </div>
 
           {/* Tag Search */}
-          <div className="bg-gradient-to-br from-[#4D6647] to-[#B5C4B1] p-6 rounded-2xl shadow-xl transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-            <h2 className="text-xl font-semibold mb-4 text-[#FFBA30] flex items-center">
+          <div className="bg-gradient-to-br from-yellow-500 to-yellow-400 p-6 rounded-2xl shadow-xl transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+            <h2 className="text-xl font-semibold mb-4 text-green-900 flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 mr-2"
@@ -267,12 +267,12 @@ export default function ServicePlaces() {
                 placeholder="Search by tags..."
                 value={searchTagTerm}
                 onChange={(e) => setSearchTagTerm(e.target.value)}
-                className="flex-grow px-4 py-3 rounded-l-full focus:outline-none focus:ring-2 focus:ring-[#FFBA30] bg-white text-[#2A3424] border-2 border-[#2A3424] shadow-inner"
+                className="flex-grow px-4 py-3 rounded-l-full focus:outline-none focus:ring-2 focus:ring-green-700 bg-white text-green-800 border-2 border-green-700 shadow-inner"
                 onKeyPress={(e) => e.key === "Enter" && handleTagSearch()}
               />
               <button
                 onClick={handleTagSearch}
-                className="bg-gradient-to-r from-[#2A3424] to-[#4D6647] text-[#FFBA30] px-6 py-3 rounded-r-full hover:from-[#4D6647] hover:to-[#2A3424] transition duration-300 font-medium transform hover:scale-105"
+                className="bg-gradient-to-r from-green-700 to-green-600 text-yellow-300 px-6 py-3 rounded-r-full hover:from-green-600 hover:to-green-500 transition duration-300 font-medium transform hover:scale-105"
               >
                 Search
               </button>
@@ -281,7 +281,7 @@ export default function ServicePlaces() {
             {/* Display tag search results */}
             {tagResults.length > 0 && (
               <div className="mt-4">
-                <h3 className="font-medium mb-2 text-[#F9E4B7] flex items-center">
+                <h3 className="font-medium mb-2 text-green-900 flex items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-4 w-4 mr-1"
@@ -293,12 +293,12 @@ export default function ServicePlaces() {
                   </svg>
                   Tag Search Results:
                 </h3>
-                <ul className="bg-[#4D6647] bg-opacity-50 p-4 rounded-lg border border-[#2A3424]">
+                <ul className="bg-yellow-400 bg-opacity-50 p-4 rounded-lg border border-green-700">
                   {tagResults.map((item) => (
                     <li key={item.id} className="mb-2 transform transition-transform hover:translate-x-1">
                       <Link
                         href={`/service_places/service_items/${item.id}`}
-                        className="text-[#FFBA30] hover:underline flex items-center font-medium"
+                        className="text-green-900 hover:underline flex items-center font-medium"
                       >
                         <span className="mr-2">•</span> {item.name}
                       </Link>
@@ -311,12 +311,12 @@ export default function ServicePlaces() {
         </div>
 
         {/* Favorites Filter */}
-        <div className="bg-gradient-to-r from-[#4D6647] to-[#B5C4B1] p-6 rounded-2xl shadow-xl mb-8 transform transition-all duration-300 hover:shadow-2xl">
+        <div className="bg-gradient-to-r from-yellow-500 to-yellow-400 p-6 rounded-2xl shadow-xl mb-8 transform transition-all duration-300 hover:shadow-2xl">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-[#FFBA30] flex items-center">
+            <h2 className="text-xl font-semibold text-green-900 flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 mr-2 text-[#FFBA30]"
+                className="h-6 w-6 mr-2 text-green-900"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -341,8 +341,8 @@ export default function ServicePlaces() {
               }}
               className={`px-6 py-3 rounded-full transition duration-300 flex items-center transform hover:scale-105 ${
                 showingFavorites
-                  ? "bg-gradient-to-r from-[#2A3424] to-[#4D6647] text-[#FFBA30] hover:from-[#4D6647] hover:to-[#2A3424] shadow-md hover:shadow-lg"
-                  : "bg-gradient-to-r from-[#B5C4B1] to-[#F9E4B7] text-[#2A3424] hover:from-[#F9E4B7] hover:to-[#B5C4B1] shadow-md hover:shadow-lg"
+                  ? "bg-gradient-to-r from-green-700 to-green-600 text-yellow-300 hover:from-green-600 hover:to-green-500 shadow-md hover:shadow-lg"
+                  : "bg-gradient-to-r from-yellow-400 to-yellow-300 text-green-900 hover:from-yellow-300 hover:to-yellow-200 shadow-md hover:shadow-lg"
               }`}
               disabled={favorites.length === 0}
             >
@@ -353,10 +353,10 @@ export default function ServicePlaces() {
             </button>
           </div>
           {favorites.length === 0 && (
-            <div className="text-[#F9E4B7] mt-4 bg-[#4D6647] bg-opacity-50 p-4 rounded-lg border border-[#2A3424] flex items-center">
+            <div className="text-green-900 mt-4 bg-yellow-400 bg-opacity-50 p-4 rounded-lg border border-green-700 flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 mr-2 text-[#FFBA30]"
+                className="h-5 w-5 mr-2 text-green-900"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -368,36 +368,36 @@ export default function ServicePlaces() {
                   d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              You haven't added any favorites yet. Click the heart icon on any service to add it to your favorites!
+              You haven't added any favorites yet. Click the heart icon on any service place to add it to your
+              favorites!
             </div>
           )}
         </div>
 
         {/* Service Item List */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[#FFBA30] to-[#F9E4B7] flex items-center">
+          <h2 className="text-2xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-green-900 to-green-800 flex items-center">
+            {/* Building icon */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-7 w-7 mr-2 text-[#FFBA30]"
+              className="h-7 w-7 mr-2 text-green-900"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-              />
+              <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             </svg>
-            All Services
+            All Service Places
           </h2>
 
           {isLoading ? (
             <div className="flex justify-center items-center h-64">
               <div className="relative">
-                <div className="w-16 h-16 border-4 border-[#F9E4B7] border-t-[#FFBA30] rounded-full animate-spin"></div>
-                <div className="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-[#4D6647] rounded-full animate-spin-slow"></div>
+                <div className="w-16 h-16 border-4 border-green-700 border-t-green-900 rounded-full animate-spin"></div>
+                <div className="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-green-800 rounded-full animate-spin-slow"></div>
               </div>
             </div>
           ) : serviceData.length > 0 ? (
@@ -407,10 +407,10 @@ export default function ServicePlaces() {
               ))}
             </div>
           ) : (
-            <div className="text-center text-[#F9E4B7] bg-gradient-to-r from-[#4D6647] to-[#B5C4B1] p-8 rounded-2xl shadow-lg">
+            <div className="text-center text-green-900 bg-gradient-to-r from-yellow-500 to-yellow-400 p-8 rounded-2xl shadow-lg">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-12 w-12 mx-auto mb-4 text-[#FFBA30]"
+                className="h-12 w-12 mx-auto mb-4 text-green-900"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -422,20 +422,20 @@ export default function ServicePlaces() {
                   d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <p className="text-xl">No services found.</p>
-              <p className="mt-2 text-[#F9E4B7]">Try a different search or check back later!</p>
+              <p className="text-xl">No service places found.</p>
+              <p className="mt-2 text-green-800">Try a different search or check back later!</p>
             </div>
           )}
         </div>
 
         {/* More to be added message */}
-        <div className="mt-8 text-center text-[#F9E4B7] bg-[#2A3424] bg-opacity-70 p-4 rounded-2xl shadow-lg">
-          <p className="italic">More essential services coming soon! Stay tuned...</p>
+        <div className="mt-8 text-center text-green-900 bg-yellow-400 bg-opacity-30 p-4 rounded-2xl shadow-lg">
+          <p className="italic">More essential service places coming soon! Stay tuned...</p>
         </div>
 
         {/* Decorative footer element */}
         <div className="mt-12 flex justify-center">
-          <div className="w-32 h-1 bg-gradient-to-r from-[#4D6647] via-[#B5C4B1] to-[#FFBA30] rounded-full"></div>
+          <div className="w-32 h-1 bg-gradient-to-r from-green-800 via-green-700 to-green-800 rounded-full"></div>
         </div>
       </div>
     </div>
@@ -466,11 +466,32 @@ function ServiceItem({ item }) {
     }
   }, [item?.image])
 
+  // Helper function to safely get tag name
+  const getTagName = (tag) => {
+    if (!tag) return "Unknown"
+    if (typeof tag === "string") return tag
+    if (typeof tag === "object") {
+      if (tag.name) return tag.name
+      if (tag.tag && tag.tag.name) return tag.tag.name
+    }
+    return "Unknown"
+  }
+
+  // Helper function to safely get tag ID for key
+  const getTagKey = (tag, index) => {
+    if (!tag) return `unknown-${index}`
+    if (typeof tag === "object") {
+      if (tag.id) return `tag-${tag.id}`
+      if (tag.tag && tag.tag.id) return `tag-${tag.tag.id}`
+    }
+    return `tag-${index}`
+  }
+
   return (
-    <div className="bg-gradient-to-br from-[#4D6647] to-[#B5C4B1] rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-102 group card-hover">
+    <div className="bg-gradient-to-br from-yellow-500 to-yellow-400 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-102 group card-hover">
       <div className="relative">
         <Link href={`/service_places/service_items/${item.id}`}>
-          <div className="h-48 bg-[#2A3424] relative overflow-hidden group-hover:h-52 transition-all duration-500">
+          <div className="h-48 bg-yellow-600 relative overflow-hidden group-hover:h-52 transition-all duration-500">
             {imageSrc ? (
               <img
                 className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
@@ -478,11 +499,11 @@ function ServiceItem({ item }) {
                 alt={item.name}
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-[#2A3424]">
-                <span className="text-[#B5C4B1]">No image available</span>
+              <div className="w-full h-full flex items-center justify-center bg-yellow-600">
+                <span className="text-yellow-300">No image available</span>
               </div>
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#2A3424] to-transparent opacity-60"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-yellow-600 to-transparent opacity-60"></div>
           </div>
         </Link>
         <button
@@ -490,34 +511,34 @@ function ServiceItem({ item }) {
             e.preventDefault()
             toggleFavorite(item.id)
           }}
-          className="absolute top-3 right-3 p-3 bg-[#2A3424] bg-opacity-80 rounded-full shadow-md hover:bg-opacity-100 transition-all transform hover:scale-110 hover:rotate-12 z-10"
+          className="absolute top-3 right-3 p-3 bg-green-800 bg-opacity-80 rounded-full shadow-md hover:bg-opacity-100 transition-all transform hover:scale-110 hover:rotate-12 z-10"
           aria-label={isFavorite(item.id) ? "Remove from favorites" : "Add to favorites"}
         >
           {isFavorite(item.id) ? (
-            <span className="text-[#FFBA30] text-xl animate-pulse">♥</span>
+            <span className="text-yellow-300 text-xl animate-pulse">♥</span>
           ) : (
-            <span className="text-[#F9E4B7] text-xl hover:text-[#FFBA30]">♡</span>
+            <span className="text-green-100 text-xl hover:text-yellow-300">♡</span>
           )}
         </button>
       </div>
 
       <div className="p-5 relative">
         {/* Decorative elements */}
-        <div className="absolute -top-1 right-0 w-12 h-12 bg-[#FFBA30] opacity-5 rounded-full transform group-hover:scale-150 transition-transform duration-700"></div>
+        <div className="absolute -top-1 right-0 w-12 h-12 bg-green-900 opacity-5 rounded-full transform group-hover:scale-150 transition-transform duration-700"></div>
 
         <Link href={`/service_places/service_items/${item.id}`}>
-          <h3 className="text-xl font-semibold mb-2 text-[#F9E4B7] group-hover:text-[#FFBA30] transition-colors duration-300">
+          <h3 className="text-xl font-semibold mb-2 text-green-900 group-hover:text-green-800 transition-colors duration-300">
             {item.name}
           </h3>
         </Link>
 
-        {item.description && <p className="text-[#F9E4B7] mb-3 line-clamp-2">{item.description}</p>}
+        {item.description && <p className="text-green-800 mb-3 line-clamp-2">{item.description}</p>}
 
         {item.openHours && (
-          <p className="text-sm text-[#F9E4B7] mb-3 flex items-center bg-[#2A3424] bg-opacity-40 p-2 rounded-lg">
+          <p className="text-sm text-green-800 mb-3 flex items-center bg-yellow-400 bg-opacity-40 p-2 rounded-lg">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 mr-2 text-[#FFBA30]"
+              className="h-5 w-5 mr-2 text-green-900"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -529,7 +550,7 @@ function ServiceItem({ item }) {
                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span className="font-medium text-[#FFBA30]">Open:</span> {item.openHours}
+            <span className="font-medium text-green-900">Open:</span> {item.openHours}
           </p>
         )}
 
@@ -537,12 +558,12 @@ function ServiceItem({ item }) {
         {item.tags && item.tags.length > 0 && (
           <div className="mt-3">
             <div className="flex flex-wrap gap-2">
-              {item.tags.map((tagRelation) => (
+              {item.tags.map((tag, index) => (
                 <span
-                  key={tagRelation.tag?.id || Math.random()}
-                  className="bg-gradient-to-r from-[#2A3424] to-[#4D6647] text-[#FFBA30] text-xs px-3 py-1 rounded-full border border-[#2A3424] transform transition-transform hover:scale-105"
+                  key={getTagKey(tag, index)}
+                  className="bg-gradient-to-r from-green-700 to-green-600 text-yellow-300 text-xs px-3 py-1 rounded-full border border-green-600 transform transition-transform hover:scale-105"
                 >
-                  {tagRelation.tag?.name || "Unknown"}
+                  {getTagName(tag)}
                 </span>
               ))}
             </div>
@@ -551,7 +572,7 @@ function ServiceItem({ item }) {
 
         <Link
           href={`/service_places/service_items/${item.id}`}
-          className="mt-4 inline-block bg-gradient-to-r from-[#2A3424] to-[#4D6647] text-[#F9E4B7] px-4 py-2 rounded-full shadow-md hover:shadow-lg transition-all duration-300 group-hover:translate-x-1 transform transition-transform flex items-center"
+          className="mt-4 inline-block bg-gradient-to-r from-green-700 to-green-600 text-white px-4 py-2 rounded-full shadow-md hover:shadow-lg transition-all duration-300 group-hover:translate-x-1 transform transition-transform flex items-center"
         >
           Explore
           <svg

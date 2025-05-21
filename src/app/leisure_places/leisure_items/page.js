@@ -46,6 +46,12 @@ export default function LeisurePlaces() {
     return saved ? JSON.parse(saved) : false
   })
 
+  useEffect(() => {
+    // Set the document title
+    document.title = "Tultool Leisure!";
+  }, []);
+
+  // Also add the fetchLeisureData function to make it reusable
   const fetchLeisureData = async () => {
     try {
       setIsLoading(true)
@@ -54,7 +60,15 @@ export default function LeisurePlaces() {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
       const data = await response.json()
-      setLeisureData(Array.isArray(data) ? data : [])
+
+      if (Array.isArray(data)) {
+        setLeisureData(data)
+      } else if (data?.data && Array.isArray(data.data)) {
+        setLeisureData(data.data)
+      } else {
+        console.error("Unexpected API response format:", data)
+        setLeisureData([])
+      }
     } catch (error) {
       console.error("Error fetching leisure data:", error)
       setLeisureData([])
@@ -72,8 +86,15 @@ export default function LeisurePlaces() {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
         const data = await response.json()
-
-        let processedData = Array.isArray(data) ? data : []
+        let processedData = []
+        if (Array.isArray(data)) {
+          processedData = data
+        } else if (data?.data && Array.isArray(data.data)) {
+          processedData = data.data
+        } else {
+          console.error("Unexpected API response format:", data)
+          processedData = []
+        }
 
         // Filter by favorites if needed
         if (showingFavorites && favorites.length > 0) {
@@ -147,14 +168,14 @@ export default function LeisurePlaces() {
           </Link>
         </div>
 
-        <h1 className="text-4xl font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-lime-300 to-yellow-300 relative">
-          Leisure Places
-          <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-green-600 via-lime-500 to-yellow-400 rounded-full"></div>
+        <h1 className="text-5xl font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-lime-300 to-yellow-300 relative animate-pulse-slow">
+          Tultool Leisure
+          <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-40 h-2 bg-gradient-to-r from-green-600 via-lime-500 to-yellow-400 rounded-full"></div>
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {/* Name Search */}
-          <div className="bg-gradient-to-br from-green-700 to-lime-600 p-6 rounded-xl shadow-lg border border-lime-500 transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+          <div className="bg-gradient-to-br from-green-700 to-lime-600 p-6 rounded-2xl shadow-xl transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
             <h2 className="text-xl font-semibold mb-4 text-yellow-300 flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -178,7 +199,7 @@ export default function LeisurePlaces() {
                 placeholder="Search for leisure activities..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="flex-grow px-4 py-3 rounded-l-full focus:outline-none focus:ring-2 focus:ring-lime-500 bg-green-50 border-2 border-lime-500"
+                className="flex-grow px-4 py-3 rounded-l-full focus:outline-none focus:ring-2 focus:ring-lime-500 bg-white text-green-800 border-2 border-lime-500 shadow-inner"
                 onKeyPress={(e) => e.key === "Enter" && handleSearch()}
               />
               <button
@@ -221,7 +242,7 @@ export default function LeisurePlaces() {
           </div>
 
           {/* Tag Search */}
-          <div className="bg-gradient-to-br from-green-700 to-lime-600 p-6 rounded-xl shadow-lg border border-lime-500 transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+          <div className="bg-gradient-to-br from-green-700 to-lime-600 p-6 rounded-2xl shadow-xl transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
             <h2 className="text-xl font-semibold mb-4 text-yellow-300 flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -245,7 +266,7 @@ export default function LeisurePlaces() {
                 placeholder="Search by tags..."
                 value={searchTagTerm}
                 onChange={(e) => setSearchTagTerm(e.target.value)}
-                className="flex-grow px-4 py-3 rounded-l-full focus:outline-none focus:ring-2 focus:ring-lime-500 bg-green-50 border-2 border-lime-500"
+                className="flex-grow px-4 py-3 rounded-l-full focus:outline-none focus:ring-2 focus:ring-lime-500 bg-white text-green-800 border-2 border-lime-500 shadow-inner"
                 onKeyPress={(e) => e.key === "Enter" && handleTagSearch()}
               />
               <button
@@ -289,7 +310,7 @@ export default function LeisurePlaces() {
         </div>
 
         {/* Favorites Filter */}
-        <div className="bg-gradient-to-r from-green-700 to-lime-600 p-6 rounded-xl shadow-lg mb-8 border border-lime-500 transform transition-all duration-300 hover:shadow-xl">
+        <div className="bg-gradient-to-r from-green-700 to-lime-600 p-6 rounded-2xl shadow-xl mb-8 border border-lime-500 transform transition-all duration-300 hover:shadow-2xl">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-yellow-300 flex items-center">
               <svg
@@ -386,7 +407,7 @@ export default function LeisurePlaces() {
               ))}
             </div>
           ) : (
-            <div className="text-center text-green-100 bg-gradient-to-r from-green-700 to-lime-600 p-8 rounded-xl shadow-lg border border-lime-500">
+            <div className="text-center text-green-100 bg-gradient-to-r from-green-700 to-lime-600 p-8 rounded-2xl shadow-lg">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-12 w-12 mx-auto mb-4 text-yellow-300"
@@ -405,6 +426,11 @@ export default function LeisurePlaces() {
               <p className="mt-2 text-green-200">Try a different search or check back later!</p>
             </div>
           )}
+        </div>
+
+        {/* More to be added message */}
+        <div className="mt-8 text-center text-green-100 bg-green-700 bg-opacity-30 p-4 rounded-2xl shadow-lg">
+          <p className="italic">More exciting leisure activities coming soon! Stay tuned...</p>
         </div>
 
         {/* Decorative footer element */}
@@ -441,7 +467,7 @@ function LeisureItem({ item }) {
   }, [item?.image])
 
   return (
-    <div className="bg-gradient-to-br from-green-700 to-lime-600 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-500 border border-lime-500 transform hover:-translate-y-2 hover:scale-102 group card-hover">
+    <div className="bg-gradient-to-br from-green-700 to-lime-600 rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-500 border border-lime-500 transform hover:-translate-y-2 hover:scale-102 group card-hover">
       <div className="relative">
         <Link href={`/leisure_places/leisure_items/${item.id}`}>
           <div className="h-48 bg-green-800 relative overflow-hidden group-hover:h-52 transition-all duration-500">
@@ -488,10 +514,10 @@ function LeisureItem({ item }) {
         {item.description && <p className="text-green-100 mb-3 line-clamp-2">{item.description}</p>}
 
         {item.openHours && (
-          <p className="text-sm text-green-200 mb-3 flex items-center">
+          <p className="text-sm text-green-200 mb-3 flex items-center bg-green-700 bg-opacity-40 p-2 rounded-lg">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4 mr-1 text-lime-400"
+              className="h-5 w-5 mr-2 text-yellow-300"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -503,7 +529,7 @@ function LeisureItem({ item }) {
                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span className="font-medium text-lime-400">Hours:</span> {item.openHours}
+            <span className="font-medium text-yellow-300">Open:</span> {item.openHours}
           </p>
         )}
 
@@ -525,9 +551,9 @@ function LeisureItem({ item }) {
 
         <Link
           href={`/leisure_places/leisure_items/${item.id}`}
-          className="mt-4 inline-block text-yellow-300 hover:text-yellow-200 transition-colors duration-300 group-hover:translate-x-1 transform transition-transform flex items-center"
+          className="mt-4 inline-block bg-gradient-to-r from-green-600 to-lime-500 text-white px-4 py-2 rounded-full shadow-md hover:shadow-lg transition-all duration-300 group-hover:translate-x-1 transform transition-transform flex items-center"
         >
-          View Details
+          Explore
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-4 w-4 ml-1 group-hover:ml-2 transition-all duration-300"

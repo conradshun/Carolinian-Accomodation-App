@@ -3,58 +3,42 @@ import { NextResponse } from "next/server"
 
 const prisma = new PrismaClient()
 
-export async function GET() {
+export async function GET(request, context) {
   try {
-    const tags = await prisma.tag.findMany({
-      where: {
-        leisureItems: {
-          some: {}, // Tags that are associated with at least one leisure item
+    // Correctly access the id from context.params
+    const { id } = context.params
+
+    if (!id) {
+      return NextResponse.json({ error: "Service item ID is required" }, { status: 400 })
+    }
+
+    const serviceItemId = Number.parseInt(id)
+
+    // Get the service item with its tags
+    const serviceItem = await prisma.serviceItem.findUnique({
+      where: { id: serviceItemId },
+      include: {
+        tags: {
+          include: {
+            tag: true,
+          },
         },
       },
     })
 
-    if (!tags || tags.length === 0) {
-      return NextResponse.json({ tags: [] }, { status: 200 })
+    if (!serviceItem) {
+      return NextResponse.json({ error: "Service item not found" }, { status: 404 })
     }
+
+    // Extract and format tags
+    const tags = serviceItem.tags.map((tagRelation) => ({
+      id: tagRelation.tag.id,
+      name: tagRelation.tag.name,
+    }))
+
     return NextResponse.json(tags, { status: 200 })
   } catch (error) {
-    console.error("Error fetching leisure item tags:", error)
-    return NextResponse.json({ error: "Failed to fetch leisure item tags", details: error.message }, { status: 500 })
-  }
-}
-
-export async function POST(req) {
-  try {
-    let name
-
-    // Inspect the Content-Type header
-    const contentType = req.headers.get("content-type")
-
-    if (contentType && contentType.includes("application/json")) {
-      // Parse as JSON
-      const jsonData = await req.json()
-      name = jsonData.name
-    } else if (contentType && contentType.includes("multipart/form-data")) {
-      // Parse as FormData
-      const formData = await req.formData()
-      name = formData.get("name")
-    } else {
-      return NextResponse.json({ error: "Unsupported Content-Type" }, { status: 400 })
-    }
-
-    if (!name) {
-      return NextResponse.json({ error: "Tag name is required" }, { status: 400 })
-    }
-
-    const tag = await prisma.tag.create({
-      data: {
-        name: name,
-      },
-    })
-
-    return NextResponse.json(tag, { status: 201 })
-  } catch (error) {
-    console.error("Error creating tag:", error)
-    return NextResponse.json({ error: "Failed to create tag", details: error.message }, { status: 500 })
+    console.error("Error fetching service item tags:", error)
+    return NextResponse.json({ error: "Failed to fetch service item tags", details: error.message }, { status: 500 })
   }
 }

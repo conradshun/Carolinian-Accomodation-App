@@ -3,36 +3,142 @@ import { NextResponse } from "next/server"
 
 const prisma = new PrismaClient()
 
-export async function POST(req, { params }) {
+export async function POST(request, context) {
   try {
-    const { id } = params
-    const { tagId } = await req.json()
+    // Correctly access the id from context.params
+    const { id } = context.params
 
-    if (!id || !tagId) {
-      return NextResponse.json({ error: "Service Item ID and Tag ID are required" }, { status: 400 })
+    if (!id) {
+      return NextResponse.json({ error: "Service item ID is required" }, { status: 400 })
     }
 
-    // Check if the service item and tag exist
-    const serviceItem = await prisma.serviceItem.findUnique({ where: { id: Number.parseInt(id) } })
-    const tag = await prisma.tag.findUnique({ where: { id: Number.parseInt(tagId) } })
+    // Parse request body
+    const contentType = request.headers.get("content-type")
+    let tagId
 
-    if (!serviceItem || !tag) {
-      return NextResponse.json({ error: "Service Item or Tag not found" }, { status: 404 })
+    if (contentType && contentType.includes("application/json")) {
+      const data = await request.json()
+      tagId = data.tagId
+    } else if (contentType && contentType.includes("multipart/form-data")) {
+      const formData = await request.formData()
+      tagId = formData.get("tagId")
+    } else {
+      return NextResponse.json({ error: "Unsupported Content-Type" }, { status: 400 })
     }
 
-    // Create the association in ServiceItemTag
-    const serviceItemTag = await prisma.serviceItemTag.create({
-      data: {
-        serviceItemId: Number.parseInt(id),
-        tagId: Number.parseInt(tagId),
+    if (!tagId) {
+      return NextResponse.json({ error: "Tag ID is required" }, { status: 400 })
+    }
+
+    // Convert IDs to numbers
+    const serviceItemId = Number.parseInt(id)
+    const parsedTagId = Number.parseInt(tagId)
+
+    // Check if service item exists
+    const serviceItem = await prisma.serviceItem.findUnique({
+      where: { id: serviceItemId },
+    })
+
+    if (!serviceItem) {
+      return NextResponse.json({ error: "Service item not found" }, { status: 404 })
+    }
+
+    // Check if tag exists
+    const tag = await prisma.tag.findUnique({
+      where: { id: parsedTagId },
+    })
+
+    if (!tag) {
+      return NextResponse.json({ error: "Tag not found" }, { status: 404 })
+    }
+
+    // Check if the association already exists
+    const existingAssociation = await prisma.serviceItemTag.findFirst({
+      where: {
+        serviceItemId: serviceItemId,
+        tagId: parsedTagId,
       },
     })
 
-    return NextResponse.json(serviceItemTag, { status: 201 })
-  } catch (error) {
-    console.error("Error associating tag with service item:", error)
+    if (existingAssociation) {
+      return NextResponse.json({ message: "Tag is already associated with this service item" }, { status: 200 })
+    }
+
+    // Create the association
+    const association = await prisma.serviceItemTag.create({
+      data: {
+        serviceItemId: serviceItemId,
+        tagId: parsedTagId,
+      },
+      include: {
+        tag: true,
+      },
+    })
+
     return NextResponse.json(
-      { error: "Failed to associate tag with service item", details: error.message },
+      {
+        message: "Tag added successfully",
+        association: {
+          id: association.id,
+          serviceItemId: association.serviceItemId,
+          tagId: association.tagId,
+          tag: association.tag,
+        },
+      },
+      { status: 201 },
+    )
+  } catch (error) {
+    console.error("Error adding tag to service item:", error)
+    return NextResponse.json({ error: "Failed to add tag to service item", details: error.message }, { status: 500 })
+  }
+}
+
+export async function DELETE(request, context) {
+  try {
+    // Correctly access the id from context.params
+    const { id } = context.params
+
+    if (!id) {
+      return NextResponse.json({ error: "Service item ID is required" }, { status: 400 })
+    }
+
+    // Parse request body
+    const contentType = request.headers.get("content-type")
+    let tagId
+
+    if (contentType && contentType.includes("application/json")) {
+      const data = await request.json()
+      tagId = data.tagId
+    } else if (contentType && contentType.includes("multipart/form-data")) {
+      const formData = await request.formData()
+      tagId = formData.get("tagId")
+    } else {
+      // Try to get tagId from URL search params
+      const url = new URL(request.url)
+      tagId = url.searchParams.get("tagId")
+
+      if (!tagId) {
+        return NextResponse.json({ error: "Tag ID is required" }, { status: 400 })
+      }
+    }
+
+    // Convert IDs to numbers
+    const serviceItemId = Number.parseInt(id)
+    const parsedTagId = Number.parseInt(tagId)
+
+    // Delete the association
+    await prisma.serviceItemTag.deleteMany({
+      where: {
+        serviceItemId: serviceItemId,
+        tagId: parsedTagId,
+      },
+    })
+
+    return NextResponse.json({ message: "Tag removed successfully from service item" }, { status: 200 })
+  } catch (error) {
+    console.error("Error removing tag from service item:", error)
+    return NextResponse.json(
+      { error: "Failed to remove tag from service item", details: error.message },
       { status: 500 },
     )
   }

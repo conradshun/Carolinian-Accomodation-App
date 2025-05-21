@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import Head from "next/head"
 
 export default function HomePage() {
   const [foodCount, setFoodCount] = useState(0)
@@ -9,6 +10,9 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    // Set the document title
+    document.title = "Tultool"
+    
     const fetchCounts = async () => {
       try {
         setIsLoading(true)
@@ -44,22 +48,20 @@ export default function HomePage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-900 via-green-800 to-green-700 relative overflow-hidden">
+    <div className="min-h-screen bg-[#f8f8f0] relative overflow-hidden">
       {/* Decorative Elements */}
-      <div className="absolute top-20 left-10 w-20 h-20 rounded-full bg-gradient-to-br from-yellow-300 to-lime-400 opacity-30 animate-float"></div>
-      <div className="absolute top-40 right-20 w-32 h-32 rounded-full bg-gradient-to-tr from-green-600 to-lime-500 opacity-20 animate-float-delay"></div>
-      <div className="absolute bottom-20 left-1/4 w-24 h-24 rounded-full bg-gradient-to-r from-lime-300 to-yellow-400 opacity-25 animate-float-slow"></div>
-      <div className="absolute bottom-40 right-1/3 w-16 h-16 rounded-full bg-gradient-to-l from-green-500 to-lime-600 opacity-20 animate-float"></div>
+      <div className="absolute top-20 left-10 w-20 h-20 rounded-full bg-gradient-to-br from-yellow-300 to-lime-400 opacity-30 animate-float blur-xl"></div>
+      <div className="absolute top-40 right-20 w-32 h-32 rounded-full bg-gradient-to-tr from-green-600 to-lime-500 opacity-20 animate-float-delay blur-xl"></div>
+      <div className="absolute bottom-20 left-1/4 w-24 h-24 rounded-full bg-gradient-to-r from-lime-300 to-yellow-400 opacity-25 animate-float-slow blur-xl"></div>
+      <div className="absolute bottom-40 right-1/3 w-16 h-16 rounded-full bg-gradient-to-l from-green-500 to-lime-600 opacity-20 animate-float blur-xl"></div>
 
       <div className="container mx-auto px-4 py-12 relative z-10">
         <header className="text-center mb-16 relative">
-          <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-40 h-2 bg-gradient-to-r from-green-600 via-lime-500 to-yellow-400 rounded-full opacity-70"></div>
-          <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-lime-300 to-yellow-300 mb-4 animate-pulse-slow">
-            Carolinian Accommodation App
+          <h1 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-lime-500 to-yellow-400 mb-4 animate-pulse-slow tracking-tight">
+            Tultool
           </h1>
-          <p className="text-xl text-green-100 max-w-2xl mx-auto relative">
-            Discover the best places to eat, relax, and get services around the campus
-            <span className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-lime-500 to-yellow-400 rounded-full"></span>
+          <p className="text-xl text-gray-700 max-w-2xl mx-auto relative">
+            Your ultimate campus companion! Discover, explore, and enjoy the best spots around USC with just a few taps.
           </p>
         </header>
 
@@ -68,7 +70,7 @@ export default function HomePage() {
           <CategoryCard
             title="Food Places"
             count={foodCount}
-            description="Discover delicious dining options and eateries"
+            description="Satisfy your cravings with delicious local eats"
             link="/food_places/food_items"
             color="from-green-800 via-green-700 to-green-600"
             hoverColor="from-green-700 via-green-600 to-green-500"
@@ -84,7 +86,7 @@ export default function HomePage() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                 />
               </svg>
             }
@@ -95,7 +97,7 @@ export default function HomePage() {
           <CategoryCard
             title="Leisure Places"
             count={leisureCount}
-            description="Find places to relax and enjoy your free time"
+            description="Unwind and recharge at the best hangout spots"
             link="/leisure_places/leisure_items"
             color="from-green-700 via-lime-600 to-lime-500"
             hoverColor="from-green-600 via-lime-500 to-lime-400"
@@ -122,7 +124,7 @@ export default function HomePage() {
           <CategoryCard
             title="Service Places"
             count={serviceCount}
-            description="Access essential services and amenities"
+            description="Find essential services to make campus life easier"
             link="/service_places/service_items"
             color="from-lime-600 via-lime-500 to-yellow-500"
             hoverColor="from-lime-500 via-lime-400 to-yellow-400"
@@ -138,7 +140,7 @@ export default function HomePage() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                 />
               </svg>
             }
@@ -147,20 +149,19 @@ export default function HomePage() {
         </div>
 
         <div className="mt-20 text-center relative">
-          <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-green-600 via-lime-500 to-yellow-400 rounded-full"></div>
-          <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-lime-300 mb-6">
-            About This App
+          <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-lime-500 mb-6">
+            About Tultool
           </h2>
-          <p className="text-green-100 max-w-3xl mx-auto">
-            The Carolinian Accommodation App helps students and visitors find the best places around campus. Whether
-            you're looking for a place to eat, relax, or access services, we've got you covered. Browse through our
-            curated list of locations, save your favorites, and find exactly what you need.
+          <p className="text-gray-700 max-w-3xl mx-auto">
+            Tultool is your go-to campus companion, designed to help students and visitors discover the best places around USC. 
+            Whether you're craving a delicious meal, looking for a spot to relax between classes, or need to find essential services, 
+            Tultool has got you covered. Explore, save your favorites, and make the most of your campus experience!
           </p>
 
           <div className="mt-12 flex justify-center space-x-4">
             <Link
               href="/food_places/food_items"
-              className="px-6 py-3 bg-gradient-to-r from-green-600 to-lime-500 rounded-full text-white font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 hover:from-green-500 hover:to-lime-400 flex items-center"
+              className="px-8 py-4 bg-gradient-to-r from-green-600 to-lime-500 rounded-full text-white font-medium shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 hover:from-green-500 hover:to-lime-400 flex items-center"
             >
               <span>Start Exploring</span>
               <svg
@@ -176,9 +177,9 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Decorative footer element */}
-        <div className="mt-16 flex justify-center">
-          <div className="w-32 h-1 bg-gradient-to-r from-green-600 via-lime-500 to-yellow-400 rounded-full"></div>
+        {/* Copyright text */}
+        <div className="mt-16 text-center text-gray-500 text-sm">
+          <p>© 2025 by Rafiq Esler, Enzo Basuil and Conrad Nestor Mativo</p>
         </div>
       </div>
     </div>
@@ -189,7 +190,7 @@ function CategoryCard({ title, count, description, link, color, hoverColor, icon
   return (
     <Link href={link} className="group">
       <div
-        className={`bg-gradient-to-br ${color} rounded-xl shadow-xl p-6 h-full transition-all duration-500 transform group-hover:scale-105 group-hover:bg-gradient-to-br ${hoverColor} hover:shadow-2xl relative overflow-hidden group-hover:-rotate-1`}
+        className={`bg-gradient-to-br ${color} rounded-3xl shadow-xl p-8 h-full transition-all duration-500 transform group-hover:scale-105 group-hover:bg-gradient-to-br ${hoverColor} hover:shadow-2xl relative overflow-hidden group-hover:-rotate-1`}
       >
         {/* Decorative elements */}
         <div className="absolute -top-4 -right-4 w-16 h-16 bg-yellow-300 opacity-10 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
@@ -205,13 +206,13 @@ function CategoryCard({ title, count, description, link, color, hoverColor, icon
           {isLoading ? (
             <div className="w-16 h-6 bg-green-800 animate-pulse rounded-full mb-4"></div>
           ) : (
-            <div className="bg-green-900 text-yellow-300 font-bold rounded-full px-4 py-1 mb-4 group-hover:bg-green-800 transition-colors duration-300 transform group-hover:scale-110">
+            <div className="bg-green-900 text-yellow-300 font-bold rounded-full px-4 py-1 mb-4 group-hover:bg-green-800 transition-colors duration-300 transform group-hover:scale-110 shadow-lg">
               {count} {count === 1 ? "Place" : "Places"}
             </div>
           )}
           <p className="text-green-100 flex-grow">{description}</p>
-          <div className="mt-6 bg-gradient-to-r from-yellow-400 to-yellow-300 text-green-900 font-semibold py-2 px-6 rounded-full hover:from-yellow-300 hover:to-yellow-200 transition-all duration-300 transform group-hover:scale-110 shadow-md group-hover:shadow-lg">
-            Explore
+          <div className="mt-6 bg-gradient-to-r from-yellow-400 to-yellow-300 text-green-900 font-semibold py-3 px-8 rounded-full hover:from-yellow-300 hover:to-yellow-200 transition-all duration-300 transform group-hover:scale-110 shadow-lg group-hover:shadow-xl">
+            Explore Now
           </div>
         </div>
       </div>

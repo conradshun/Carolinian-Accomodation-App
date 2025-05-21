@@ -233,40 +233,41 @@ export default function LeisurePlaces() {
             </div>
 
             {/* Display search results */}
-            <div
-              className="mt-4 overflow-hidden transition-all duration-300"
-              style={{ maxHeight: searchResults.length > 0 ? "300px" : "0" }}
-            >
-              <h3 className="font-medium mb-2 text-green-900 flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 mr-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-                Search Results:
-              </h3>
-              <div className="bg-lime-500 bg-opacity-50 p-4 rounded-lg border border-green-700 max-h-60 overflow-y-auto">
-                {searchResults.length > 0 ? (
-                  <ul>
-                    {searchResults.map((item) => (
-                      <li key={item.id} className="mb-2 transform transition-transform hover:translate-x-1">
-                        <Link
-                          href={`/leisure_places/leisure_items/${item.id}`}
-                          className="text-green-900 hover:underline flex items-center font-medium"
-                        >
-                          <span className="mr-2">•</span> {item.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-green-800 italic">No results found. Try a different search term.</p>
-                )}
-              </div>
+            <div className="mt-4">
+              {searchTerm.trim() !== "" && (
+                <>
+                  <h3 className="font-medium mb-2 text-green-900 flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    Search Results:
+                  </h3>
+                  <div className="bg-lime-500 bg-opacity-50 p-4 rounded-lg border border-green-700 max-h-60 overflow-y-auto">
+                    {searchResults.length > 0 ? (
+                      <ul>
+                        {searchResults.map((item) => (
+                          <li key={item.id} className="mb-2 transform transition-transform hover:translate-x-1">
+                            <Link
+                              href={`/leisure_places/leisure_items/${item.id}`}
+                              className="text-green-900 hover:underline flex items-center font-medium"
+                            >
+                              <span className="mr-2">•</span> {item.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-green-800 italic">No results found. Try a different search term.</p>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
@@ -307,40 +308,41 @@ export default function LeisurePlaces() {
             </div>
 
             {/* Display tag search results */}
-            <div
-              className="mt-4 overflow-hidden transition-all duration-300"
-              style={{ maxHeight: tagResults.length > 0 ? "300px" : "0" }}
-            >
-              <h3 className="font-medium mb-2 text-green-900 flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 mr-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-                Tag Search Results:
-              </h3>
-              <div className="bg-lime-500 bg-opacity-50 p-4 rounded-lg border border-green-700 max-h-60 overflow-y-auto">
-                {tagResults.length > 0 ? (
-                  <ul>
-                    {tagResults.map((item) => (
-                      <li key={item.id} className="mb-2 transform transition-transform hover:translate-x-1">
-                        <Link
-                          href={`/leisure_places/leisure_items/${item.id}`}
-                          className="text-green-900 hover:underline flex items-center font-medium"
-                        >
-                          <span className="mr-2">•</span> {item.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-green-800 italic">No results found. Try different tags.</p>
-                )}
-              </div>
+            <div className="mt-4">
+              {searchTagTerm.trim() !== "" && (
+                <>
+                  <h3 className="font-medium mb-2 text-green-900 flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    Tag Search Results:
+                  </h3>
+                  <div className="bg-lime-500 bg-opacity-50 p-4 rounded-lg border border-green-700 max-h-60 overflow-y-auto">
+                    {tagResults.length > 0 ? (
+                      <ul>
+                        {tagResults.map((item) => (
+                          <li key={item.id} className="mb-2 transform transition-transform hover:translate-x-1">
+                            <Link
+                              href={`/leisure_places/leisure_items/${item.id}`}
+                              className="text-green-900 hover:underline flex items-center font-medium"
+                            >
+                              <span className="mr-2">•</span> {item.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-green-800 italic">No results found. Try different tags.</p>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

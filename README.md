@@ -1,14 +1,86 @@
-# Carolinian-Accomodation-App
-This application aims to provide Carolinians with information that can allow them to be aware about the ins and outs of the university as well as feel right at home. Specifically, it aims to integrate the following features: 
-Application Features: This application aims to provide Carolinians with information that can allow them to be aware about the ins and outs of the university as well as feel right at home. Specifically, it aims to integrate the following features: 
-Restaurant Recommendation: This displays the best known eateries and restaurants around campus, along with necessary directions (e.g. Orange Brutus, 24 Chicken, Chai Tea etc).
-Leisure Place Recommendation: This displays the best known leisure places and around campus, along with necessary directions (e.g. Drippy Lab, HRTX, etc).
-Service Place Recommendations: This displays any known service centers around campus, along with necessary directions (e.g. that one printing shop)
+Carolinian Accommodation App
+The Carolinian Accommodation App is a digital platform designed to assist Carolinians in navigating university life. It offers features that provide information about the university's ins and outs, helping users feel right at home.
 
- ## Environment Setup
+Features
+University Information: Access comprehensive details about university facilities, services, and events.
 
-1. Copy `.env.example` to `.env`
-2. Update the values in `.env` with your local database credentials
-3. Run `npm run dev` to start the development server
+Accommodation Listings: Browse and manage accommodation options suitable for students.
 
-Note: Never commit your `.env` file to the repository. "sorry rafiq"
+User Profiles: Create and manage personal profiles to personalize the user experience.
+
+Interactive Map: Navigate the campus with an integrated map highlighting key locations.
+
+Notifications: Receive timely updates about university announcements and events.
+
+Technologies Used
+Next.js: Framework for server-rendered React applications.
+
+Prisma: Next-generation ORM for Node.js and TypeScript.
+
+Tailwind CSS: Utility-first CSS framework for rapid UI development.
+
+PostgreSQL: Relational database for storing application data.
+
+Getting Started
+Prerequisites
+Node.js (v14 or later)
+
+npm or yarn
+
+PostgreSQL database
+
+Installation
+Clone the repository:
+
+bash
+Copy
+Edit
+git clone https://github.com/conradshun/Carolinian-Accomodation-App.git
+cd Carolinian-Accomodation-App
+Install dependencies:
+
+bash
+Copy
+Edit
+npm install
+# or
+yarn install
+Set up environment variables:
+Create a .env file in the root directory and add your database connection string:
+
+env
+Copy
+Edit
+DATABASE_URL="your_postgresql_connection_string"
+Run database migrations:
+
+bash
+Copy
+Edit
+npx prisma migrate dev --name init
+Start the development server:
+
+bash
+Copy
+Edit
+npm run dev
+# or
+yarn dev
+Open http://localhost:3000 in your browser to view the application.
+
+Project Structure
+/src - Main application source code.
+
+/prisma - Prisma schema and migrations.
+
+/assets - Static assets such as images and icons.
+
+/public - Publicly accessible files.
+
+/styles - Global and component-specific styles.
+
+Contributing
+Contributions are welcome! Please fork the repository and submit a pull request with your changes.
+
+License
+This project is licensed under the MIT License. See the LICENSE file for details.
